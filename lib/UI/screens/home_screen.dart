@@ -76,11 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               if (snapshot.hasData) {
                 return GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
                 );
               }
-              return Text(
+              return const Text(
                 "You have no cars",
               );
             },
