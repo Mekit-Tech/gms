@@ -8,15 +8,6 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.18.6 <3.0.0'
   
-  # assets:
-  #   - assets/icons/
-  # fonts:
-  #   - family: DMSans
-  #     fonts:
-  #       - asset: assets/fonts/DMSans-Bold.ttf
-  #       - asset: assets/fonts/DMSans-Medium.ttf
-  #       - asset: assets/fonts/DMSans-Regular.ttf
-  
 dependencies:
   flutter:
     sdk: flutter
@@ -31,3 +22,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/icons/
+  fonts:
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans-Bold.ttf
+        - asset: assets/fonts/DMSans-Medium.ttf
+        - asset: assets/fonts/DMSans-Regular.ttf
