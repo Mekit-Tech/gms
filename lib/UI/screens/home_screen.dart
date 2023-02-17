@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mekit_gms/UI/widgets/card_widget.dart';
 
 // New Home
 
@@ -67,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection("cars").snapshots(),
-            builder: (context, AsyncSnapshot snapshot) {
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               //checking the connection state, if we still load the data we display a progress bar
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -78,6 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 return GridView(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
+                  children: snapshot.data!.docs
+                      .map((cars) => noteCard(() {}, cars))
+                      .toList(),
                 );
               }
               return const Text(
