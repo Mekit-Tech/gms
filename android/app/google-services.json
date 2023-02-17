@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "192015716382",
+    "project_id": "mekitgms0",
+    "storage_bucket": "mekitgms0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192015716382:android:339530572a62d710745e0f",
+        "android_client_info": {
+          "package_name": "in.mekit.mekit_gms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192015716382-nojkd6qpn6locu4ejljqkurquoorokkb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJCYuecrkxoBRXoZ6GD2LaCsXejxs0shk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192015716382-nojkd6qpn6locu4ejljqkurquoorokkb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
