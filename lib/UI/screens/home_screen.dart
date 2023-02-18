@@ -77,19 +77,22 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
             if (snapshot.hasData) {
-              return GridView(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                children: snapshot.data!.docs
-                    .map((cars) => noteCard(() {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VehicleProfile(cars),
-                            ),
-                          );
-                        }, cars))
-                    .toList(),
+              return Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: GridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  children: snapshot.data!.docs
+                      .map((cars) => noteCard(() {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VehicleProfile(cars),
+                              ),
+                            );
+                          }, cars))
+                      .toList(),
+                ),
               );
             }
             return const Text(
