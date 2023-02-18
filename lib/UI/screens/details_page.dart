@@ -14,6 +14,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: 70,
           backgroundColor: Colors.white,
           elevation: 0.0,
@@ -44,6 +45,16 @@ class _VehicleProfileState extends State<VehicleProfile> {
               ),
             ),
           ]),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.doc["car_model"]),
+            // Text(doc[Int(phone_no)]),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mekit_gms/UI/screens/details_page.dart';
 import 'package:mekit_gms/UI/widgets/card_widget.dart';
 
 // New Home
@@ -80,7 +81,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 children: snapshot.data!.docs
-                    .map((cars) => noteCard(() {}, cars))
+                    .map((cars) => noteCard(() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VehicleProfile(cars),
+                            ),
+                          );
+                        }, cars))
                     .toList(),
               );
             }
