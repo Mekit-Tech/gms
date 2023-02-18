@@ -1,6 +1,5 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mekit_gms/models/customer.dart';
 
 class AddNew extends StatefulWidget {
   const AddNew({Key? key}) : super(key: key);
@@ -43,23 +42,23 @@ class _AddNewState extends State<AddNew> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
+              onPressed: () async {
                 if (contactkey.currentState!.validate()) {
                   contactkey.currentState!.save();
 
-                  CustomerModel c1 = CustomerModel(
-                    name: name,
-                    phone: phone,
-                    regno: regno,
-                    odoreading: odoreading,
-                  );
-
-                  // setState(() {
-                  //   Global.allcontacts.add(c1);
-                  // });
+                  FirebaseFirestore.instance.collection("cars").add({
+                    "rto_number": regnocontroller.text,
+                    "customer_name": namecontroller.text,
+                    "phone_no": phonenumbercontroller.text,
+                    "odo_reading": odoreadingcontroller.text,
+                  }).then((value) {
+                    print(value.id);
+                    Navigator.pop(context);
+                  }).catchError((error) =>
+                      print("Failed to Add New Customer due to $error"));
 
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil('homepage', (route) => false);
+                      .pushNamedAndRemoveUntil('homepage', (route) => true);
                 }
               },
               icon: const Icon(Icons.check))

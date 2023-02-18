@@ -50,8 +50,8 @@ class _VehicleProfileState extends State<VehicleProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.doc["car_model"]),
-            // Text(doc[Int(phone_no)]),
+            Text(widget.doc["rto_number"]),
+            // TODO:
           ],
         ),
       ),

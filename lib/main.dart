@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mekit_gms/UI/screens/details_page.dart';
 import 'package:mekit_gms/UI/screens/home_screen.dart';
 import 'UI/screens/add_new.dart';
 
@@ -21,7 +20,6 @@ class MyApp extends StatelessWidget {
       routes: {
         'homepage': (context) => const HomeScreen(),
         'newcustomer': (context) => const AddNew(),
-        // 'detail': (context) => VehicleProfile(),
       },
     );
   }
