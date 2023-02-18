@@ -56,9 +56,6 @@ class _AddNewState extends State<AddNew> {
                     Navigator.pop(context);
                   }).catchError((error) =>
                       print("Failed to Add New Customer due to $error"));
-
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('homepage', (route) => true);
                 }
               },
               icon: const Icon(Icons.check))
