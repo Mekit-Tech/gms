@@ -9,12 +9,16 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
       padding: const EdgeInsets.all(8.0),
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Colors.blueAccent,
+        color: Color.fromARGB(255, 132, 214, 80),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            doc["customer_name"],
+            style: TextStyle(color: Colors.white),
+          ),
           Text(doc["rto_number"]),
           // Text(doc[Int(phone_no)]),
         ],
