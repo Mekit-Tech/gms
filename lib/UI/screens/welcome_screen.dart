@@ -38,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ElevatedButton(
               child: const Text('Get Started'),
               onPressed: () {
-                ap.isSignedIn == true
+                ap.isSignedIn == true // when true, then fetch shared prefs data
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -48,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     : Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RegisterScreen(),
+                          builder: (context) => RegisterScreen(),
                         ),
                       );
               },
