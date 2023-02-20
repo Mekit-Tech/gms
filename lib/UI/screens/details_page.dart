@@ -25,17 +25,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
             child: Image.asset('assets/icons/mekitblacklogo.png'),
           ),
           actions: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24, right: 10),
-              child: Text(
-                "0",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
@@ -55,7 +44,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                height: 300,
+                height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
@@ -84,12 +73,11 @@ class _VehicleProfileState extends State<VehicleProfile> {
                           style:
                               const TextStyle(fontSize: 16, color: Colors.grey),
                         ),
-                        const SizedBox(height: 20),
                       ],
                     ),
                     Expanded(
                       child: IconButton(
-                        alignment: Alignment.topRight,
+                        alignment: Alignment.centerRight,
                         icon: const Icon(Icons.call_outlined),
                         onPressed: () {
                           // Add button onPressed action here
