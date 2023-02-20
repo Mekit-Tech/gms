@@ -88,18 +88,18 @@ class _VehicleProfileState extends State<VehicleProfile> {
             ),
             FloatingActionButton(
               onPressed: () {
-                // Perform some action when the button is pressed
+                // Perform add jobs / labour when the botton is pressed
               },
               hoverElevation: 50,
               backgroundColor: Colors.black,
               foregroundColor: Colors.white,
               splashColor: Colors.greenAccent.shade700,
               hoverColor: Colors.grey,
+              // Set the shape of the button to rectangular with rounded corners
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                    10), // Set the shape of the button to rectangular with rounded corners
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         ),
