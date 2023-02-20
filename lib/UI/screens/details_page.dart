@@ -37,56 +37,69 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ]),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 2,
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.doc["customer_name"],
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 21,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.doc["rto_number"],
-                          style:
-                              const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: IconButton(
-                        alignment: Alignment.centerRight,
-                        icon: const Icon(Icons.call_outlined),
-                        onPressed: () {
-                          // Add button onPressed action here
-                        },
-                      ),
-                    ),
-                  ],
+            Container(
+              padding: const EdgeInsets.all(20),
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 2,
                 ),
               ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.doc["customer_name"],
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 21,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        widget.doc["rto_number"],
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(Icons.call_outlined),
+                      onPressed: () {
+                        // Add button onPressed action here
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                // Perform some action when the button is pressed
+              },
+              hoverElevation: 50,
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              splashColor: Colors.greenAccent.shade700,
+              hoverColor: Colors.grey,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    10), // Set the shape of the button to rectangular with rounded corners
+              ),
+              child: Icon(Icons.add),
             ),
           ],
         ),
