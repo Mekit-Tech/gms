@@ -56,8 +56,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.all(20),
