@@ -25,6 +25,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Image.asset('assets/icons/mekitblacklogo.png'),
         ),
       ),
+      floatingActionButton: SizedBox(
+        width: 200,
+        child: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          splashColor: Colors.greenAccent.shade700,
+          hoverColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          onPressed: () {},
+          child: const Icon(
+            Icons.arrow_forward,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -69,7 +86,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 counterText: '',
               ),
             ),
-            
           ],
         ),
       ),
