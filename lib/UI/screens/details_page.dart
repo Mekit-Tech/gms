@@ -63,7 +63,8 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   ),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.doc["customer_name"],
@@ -72,14 +73,14 @@ class _VehicleProfileState extends State<VehicleProfile> {
                         fontSize: 21,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       widget.doc["rto_number"],
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.call),
                       onPressed: () {
                         // Add button onPressed action here
                       },
