@@ -17,10 +17,19 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
         children: [
           Text(
             doc["customer_name"],
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          Text(doc["rto_number"]),
-          // Text(doc[Int(phone_no)]),
+          Text(
+            doc["rto_number"],
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+            ),
+          ),
         ],
       ),
     ),
