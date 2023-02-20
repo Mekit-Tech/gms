@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/home_screen.dart';
+import 'package:mekit_gms/UI/screens/welcome_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'UI/screens/new_customer_screen.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const HomeScreen(),
+        home: const WelcomeScreen(),
         routes: {
           'homepage': (context) => const HomeScreen(),
           'newcustomer': (context) => const AddNew(),
