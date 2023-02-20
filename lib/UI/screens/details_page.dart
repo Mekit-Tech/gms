@@ -54,6 +54,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
           children: [
             Expanded(
               child: Container(
+                padding: const EdgeInsets.all(20),
                 height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -62,35 +63,32 @@ class _VehicleProfileState extends State<VehicleProfile> {
                     width: 2,
                   ),
                 ),
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.doc["customer_name"],
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 21,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      widget.doc["rto_number"],
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 20),
-                    IconButton(
-                      icon: const Icon(Icons.call),
-                      onPressed: () {
-                        // Add button onPressed action here
-                      },
+                    Column(
+                      children: [
+                        Text(
+                          widget.doc["customer_name"],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 21,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.doc["rto_number"],
+                          style:
+                              const TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-
-            // TODO:
           ],
         ),
       ),
