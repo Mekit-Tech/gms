@@ -68,6 +68,8 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.doc["customer_name"],
@@ -84,6 +86,15 @@ class _VehicleProfileState extends State<VehicleProfile> {
                         ),
                         const SizedBox(height: 20),
                       ],
+                    ),
+                    Expanded(
+                      child: IconButton(
+                        alignment: Alignment.topRight,
+                        icon: const Icon(Icons.call_outlined),
+                        onPressed: () {
+                          // Add button onPressed action here
+                        },
+                      ),
                     ),
                   ],
                 ),
