@@ -15,34 +15,33 @@ class _VehicleProfileState extends State<VehicleProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 70,
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          centerTitle: false,
-          title: SizedBox(
-            width: 45,
-            child: Image.asset('assets/icons/mekitblacklogo.png'),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: SizedBox(
-                width: 55,
-                child: Image.asset(
-                  'assets/icons/car.png',
-                ),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 70,
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: false,
+        title: SizedBox(
+          width: 45,
+          child: Image.asset('assets/icons/mekitblacklogo.png'),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: SizedBox(
+              width: 55,
+              child: Image.asset(
+                'assets/icons/car.png',
               ),
             ),
-          ]),
-          
+          ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.all(20),
@@ -55,8 +54,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -89,7 +86,21 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 ],
               ),
             ),
-            
+            FloatingActionButton(
+              onPressed: () {
+                // Perform add jobs / labour when the botton is pressed
+              },
+              hoverElevation: 50,
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              splashColor: Colors.greenAccent.shade700,
+              hoverColor: Colors.grey,
+              // Set the shape of the button to rectangular with rounded corners
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.add),
+            ),
           ],
         ),
       ),
