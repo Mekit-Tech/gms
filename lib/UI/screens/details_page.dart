@@ -35,6 +35,9 @@ class _VehicleProfileState extends State<VehicleProfile> {
               ),
             ),
           ]),
+          
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -86,21 +89,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 ],
               ),
             ),
-            FloatingActionButton(
-              onPressed: () {
-                // Perform add jobs / labour when the botton is pressed
-              },
-              hoverElevation: 50,
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              splashColor: Colors.greenAccent.shade700,
-              hoverColor: Colors.grey,
-              // Set the shape of the button to rectangular with rounded corners
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.add),
-            ),
+            
           ],
         ),
       ),
