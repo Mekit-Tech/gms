@@ -52,9 +52,9 @@ class _AddNewState extends State<AddNew> {
                     "phone_no": phonenumbercontroller.text,
                     "odo_reading": odoreadingcontroller.text,
                   }).then((value) {
-                    print(value.id);
                     Navigator.pop(context);
                   }).catchError((error) =>
+                      // ignore: avoid_print, invalid_return_type_for_catch_error
                       print("Failed to Add New Customer due to $error"));
                 }
               },

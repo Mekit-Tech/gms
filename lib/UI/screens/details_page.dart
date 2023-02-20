@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
   QueryDocumentSnapshot doc;
@@ -11,7 +12,6 @@ class VehicleProfile extends StatefulWidget {
 class _VehicleProfileState extends State<VehicleProfile> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
