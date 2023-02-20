@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/home_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'UI/screens/add_new.dart';
+import 'UI/screens/new_customer_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
