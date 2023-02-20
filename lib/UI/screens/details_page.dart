@@ -36,7 +36,23 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        width: 200,
+        child: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          splashColor: Colors.greenAccent.shade700,
+          hoverColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          onPressed: () {},
+          child: const Icon(
+            Icons.add,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -85,21 +101,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   ),
                 ],
               ),
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                // Perform add jobs / labour when the botton is pressed
-              },
-              hoverElevation: 50,
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              splashColor: Colors.greenAccent.shade700,
-              hoverColor: Colors.grey,
-              // Set the shape of the button to rectangular with rounded corners
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.add),
             ),
           ],
         ),
