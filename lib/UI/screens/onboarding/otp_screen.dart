@@ -103,7 +103,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           border: Border.all(color: Colors.black38),
                         ),
                       ),
-                      onSubmitted: (value) {
+                      onCompleted: (value) {
                         setState(() {
                           otpCode = value;
                         });
