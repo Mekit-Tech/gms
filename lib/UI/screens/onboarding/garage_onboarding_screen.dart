@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/models/garage_model.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
+import 'package:mekit_gms/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -49,7 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () {},
+          onPressed: () => storeData(),
           child: const Icon(
             Icons.arrow_forward,
           ),
@@ -138,5 +140,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // Store new garage data to database
   void storeData() async {
     final ap = Provider.of<AuthProvider>(context, listen: false);
+    GarageModel garageModel = GarageModel(
+      name: nameController.text.trim(),
+      address: addressController.text.trim(),
+      phoneNumber: "",
+      garageLogo: "",
+      createdAt: "",
+      uid: "",
+    );
+    if (logo != null) {
+    } else {
+      showSnackBar(context, "Please upload your Logo");
+    }
   }
 }
