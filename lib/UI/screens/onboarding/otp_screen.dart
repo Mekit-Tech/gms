@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:mekit_gms/utils/utils.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
@@ -16,6 +17,8 @@ class _OtpScreenState extends State<OtpScreen> {
   String? otpCode;
   @override
   Widget build(BuildContext context) {
+    final isLoading =
+        Provider.of<AuthProvider>(context, listen: true).isLoading;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,58 +57,68 @@ class _OtpScreenState extends State<OtpScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              "OTP Verification",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 27,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              "Enter OTP sent to your phone number.",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Pinput(
-              length: 6,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              showCursor: true,
-              defaultPinTheme: PinTheme(
-                textStyle: const TextStyle(fontSize: 20),
-                width: 50,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black38),
+        child: isLoading == true
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black45,
+                ),
+              )
+            : Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "OTP Verification",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      "Enter OTP sent to your phone number.",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Pinput(
+                      length: 6,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      showCursor: true,
+                      defaultPinTheme: PinTheme(
+                        textStyle: const TextStyle(fontSize: 20),
+                        width: 50,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black38),
+                        ),
+                      ),
+                      onSubmitted: (value) {
+                        setState(() {
+                          otpCode = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    const Text("Resend OTP"),
+                  ],
                 ),
               ),
-              onSubmitted: (value) {
-                setState(() {
-                  otpCode = value;
-                });
-              },
-            ),
-            const SizedBox(height: 40),
-            const Text("Resend OTP"),
-          ],
-        ),
       ),
     );
   }
 
   // verify otp
-  void verifyOtp(BuildContext context, String userOtp) {}
+  void verifyOtp(BuildContext context, String userOtp) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+  }
 }
