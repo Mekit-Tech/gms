@@ -11,6 +11,19 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 70,
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: false,
+        title: SizedBox(
+          width: 45,
+          child: Image.asset('assets/icons/mekitblacklogo.png'),
+        ),
+      ),
+    );
   }
 }

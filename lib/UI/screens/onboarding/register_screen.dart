@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () {},
+          onPressed: () => sendPhoneNumber(),
           child: const Icon(
             Icons.arrow_forward,
           ),
