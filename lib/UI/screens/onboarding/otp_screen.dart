@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/utils/utils.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -39,7 +40,13 @@ class _OtpScreenState extends State<OtpScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () {},
+          onPressed: () {
+            if (otpCode != null) {
+              verifyOtp(context, otpCode!);
+            } else {
+              showSnackBar(context, "Enter 6 digit code");
+            }
+          },
           child: const Icon(
             Icons.arrow_forward,
           ),
@@ -99,4 +106,7 @@ class _OtpScreenState extends State<OtpScreen> {
       ),
     );
   }
+
+  // verify otp
+  void verifyOtp(BuildContext context, String userOtp){}
 }
