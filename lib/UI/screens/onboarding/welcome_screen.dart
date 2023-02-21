@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/home_screen.dart';
-import 'package:mekit_gms/UI/screens/register_screen.dart';
+import 'package:mekit_gms/UI/screens/onboarding/register_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
