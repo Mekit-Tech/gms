@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -131,5 +133,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
+  }
+
+  // Store new garage data to database
+  void storeData() async {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
   }
 }

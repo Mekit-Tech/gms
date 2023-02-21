@@ -1,52 +1,42 @@
+class GarageModel {
+  final String name;
+  final String address;
+  final String phoneNumber;
+  final String garageLogo;
+  final String createdAt;
+  final String uid;
 
-// class Garage {
-//   final int id;
-//   final String name;
-//   final String phoneNumber;
-//   final String location;
-//   final String imageUrl;
+  GarageModel({
+    required this.name,
+    required this.address,
+    required this.phoneNumber,
+    required this.garageLogo,
+    required this.createdAt,
+    required this.uid,
+  });
 
-//   const Garage(
-//       {required this.id,
-//       required this.name,
-//       required this.phoneNumber,
-//       required this.location,
-//       required this.imageUrl});
+  // from map - we get the data from the server
 
-//   @override
-//   List<Object> get props => [id, name, phoneNumber, location, imageUrl];
+  factory GarageModel.fromMap(Map<String, dynamic> map) {
+    return GarageModel(
+      name: map['name'] ?? '',
+      address: map['address'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+      garageLogo: map['garageLogo'] ?? '',
+      createdAt: map['createdAt'] ?? '',
+      uid: map['uid'] ?? '',
+    );
+  }
 
-//   @override
-//   bool get stringify => true;
-// }
-
-// Garage joel = const Garage(
-//   id: 1,
-//   name: "Express Autocare",
-//   phoneNumber: "+91 8888657702",
-//   location: "Gawdrage Hills",
-//   imageUrl: "https://mekit.in/assets/logos/expressautocare.png",
-// );
-
-// Garage sardar = const Garage(
-//   id: 2,
-//   name: "Wash and More",
-//   phoneNumber: "+91 8888657702",
-//   location: "Near Sandeep Hotel",
-//   imageUrl: "https://mekit.in/assets/logos/washandmore.png",
-// );
-
-// Garage mannu = const Garage(
-//   id: 3,
-//   name: "Mannu Auto",
-//   phoneNumber: "+91 8888657702",
-//   location: "Near New Road",
-//   imageUrl: "https://mekit.in/assets/logos/mannuauto.png",
-// );
-
-// // Above data will be used like this to the pdf generator 
-// // garage.id
-// // garage.name 
-// // garage.phoneNumber
-// // garage.location
-// // garage.imageUrl
+  // to map - we sending data to the server
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "address": address,
+      "phoneNumber": phoneNumber,
+      "garageLogo": garageLogo,
+      "createdAt": createdAt,
+      "uid": uid,
+    };
+  }
+}
