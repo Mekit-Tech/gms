@@ -86,8 +86,14 @@ class _OtpScreenState extends State<OtpScreen> {
                   border: Border.all(color: Colors.black38),
                 ),
               ),
-              onSubmitted: (value) {},
+              onSubmitted: (value) {
+                setState(() {
+                  otpCode = value;
+                });
+              },
             ),
+            const SizedBox(height: 40),
+            const Text("Resend OTP"),
           ],
         ),
       ),
