@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/UI/screens/onboarding/garage_onboarding_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:mekit_gms/utils/utils.dart';
 import 'package:pinput/pinput.dart';
@@ -120,5 +121,24 @@ class _OtpScreenState extends State<OtpScreen> {
   // verify otp
   void verifyOtp(BuildContext context, String userOtp) {
     final ap = Provider.of<AuthProvider>(context, listen: false);
+    ap.verifyOtp(
+        context: context,
+        verificationId: widget.verificationId,
+        userOtp: userOtp,
+        onSucsess: () {
+          // Check weather Garage exists in the database
+          ap.checkExistingUser().then((value) async {
+            if (value == true) {
+              // Garage exists in our database
+            } else {
+              // New Garage
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const OnboardingScreen()),
+                  (route) => false);
+            }
+          });
+        });
   }
 }

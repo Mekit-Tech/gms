@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/onboarding/otp_screen.dart';
@@ -13,6 +14,7 @@ class AuthProvider extends ChangeNotifier {
   String get uid => _uid!;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   AuthProvider() {
     checkSign();
@@ -80,6 +82,19 @@ class AuthProvider extends ChangeNotifier {
       showSnackBar(context, e.message.toString());
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  // DATABASE OPERATION
+  Future<bool> checkExistingUser() async {
+    DocumentSnapshot snapshot =
+        await _firebaseFirestore.collection("garages").doc(_uid).get();
+    if (snapshot.exists) {
+      print("Garage Exists");
+      return true;
+    } else {
+      print("New Garage");
+      return false;
     }
   }
 }
