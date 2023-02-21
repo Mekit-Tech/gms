@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  String? _uid;
+  String get uid => _uid!;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -20,6 +24,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // SIGN IN
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       await _firebaseAuth.verifyPhoneNumber(
@@ -44,6 +49,37 @@ class AuthProvider extends ChangeNotifier {
           codeAutoRetrievalTimeout: (verificationID) {});
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message.toString());
+    }
+  }
+
+  // VERIFIY OTP
+  void verifyOtp({
+    required BuildContext context,
+    required String verificationId,
+    required String userOtp,
+    required Function onSucsess,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      PhoneAuthCredential creds = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: userOtp);
+
+      User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
+
+      if (user != null) {
+        // If user is not null, we carry our logic
+        _uid = user.uid;
+        onSucsess();
+      }
+
+      _isLoading = false;
+      notifyListeners();
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message.toString());
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }
