@@ -94,10 +94,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // Funtion to send phone number 
+  // Funtion to send phone number
 
   void sendPhoneNumber() {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     String phoneNumber = phoneController.text.trim();
+    ap.signInWithPhone(context, "+91$phoneNumber");
   }
 }
