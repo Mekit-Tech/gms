@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mekit_gms/UI/screens/home_screen.dart';
 import 'dart:io';
 import 'package:mekit_gms/models/garage_model.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
@@ -169,7 +170,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         context: context,
         garageModel: garageModel,
         garageLogo: logo!,
-        onSuccess: () {},
+        onSuccess: () {
+          // ONCE THE DATA IS SAVED, WE HAVE TO STORE IT LOCACLLY ALSO.
+          ap.saveGarageDatatoSP().then(
+                (value) => ap.setSignIn().then(
+                      (value) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ),
+                      ),
+                    ),
+              );
+        },
       );
     } else {
       showSnackBar(context, "Please upload your Logo");

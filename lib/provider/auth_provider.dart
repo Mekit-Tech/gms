@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,6 +32,15 @@ class AuthProvider extends ChangeNotifier {
   void checkSign() async {
     final SharedPreferences s = await SharedPreferences.getInstance();
     _isSignedIn = s.getBool("is_signedin") ?? false;
+    notifyListeners();
+  }
+
+  // IF THE USER IS SIGNED IN ALREADY - STAYS SIGNED IN
+
+  Future setSignIn() async {
+    final SharedPreferences s = await SharedPreferences.getInstance();
+    s.setBool("is_signedin", true);
+    _isSignedIn = true;
     notifyListeners();
   }
 
@@ -150,5 +160,13 @@ class AuthProvider extends ChangeNotifier {
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
+  }
+
+  // STORING DATA LOCALLY WITH SHARED PREFS
+
+  Future saveGarageDatatoSP() async {
+    // SP means shared prefs
+    SharedPreferences s = await SharedPreferences.getInstance();
+    await s.setString("garage_model", jsonEncode(garageModel.toMap()));
   }
 }
