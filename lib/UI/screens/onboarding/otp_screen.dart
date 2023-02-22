@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mekit_gms/UI/screens/home_screen.dart';
 import 'package:mekit_gms/UI/screens/onboarding/garage_onboarding_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
 import 'package:mekit_gms/utils/utils.dart';
@@ -137,6 +136,18 @@ class _OtpScreenState extends State<OtpScreen> {
           ap.checkExistingUser().then((value) async {
             if (value == true) {
               // Garage exists in our database
+              ap.getDataFromFirestore().then(
+                    (value) => ap.saveGarageDatatoSP().then(
+                          (value) => ap.setSignIn().then(
+                                (value) => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                    (route) => false),
+                              ),
+                        ),
+                  );
             } else {
               // New Garage
               Navigator.pushAndRemoveUntil(
@@ -147,21 +158,5 @@ class _OtpScreenState extends State<OtpScreen> {
             }
           });
         });
-  }
-
-  // TIMER FOR OTP EXPIRY
-  void startTimer() {
-    const onsec = Duration(seconds: 1);
-    Timer timer = Timer.periodic(onsec, (timer) {
-      if (start == 0) {
-        setState(() {
-          timer.cancel();
-        });
-      } else {
-        setState(() {
-          start--;
-        });
-      }
-    });
   }
 }

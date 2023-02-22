@@ -161,11 +161,48 @@ class AuthProvider extends ChangeNotifier {
     return downloadUrl;
   }
 
+  // GETTING DATA FOR REGISTERED GARAGE FROM FIREBASE TO SHARED PREFS
+  Future getDataFromFirestore() async {
+    await _firebaseFirestore
+        .collection("garages")
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get()
+        .then((DocumentSnapshot snapshot) {
+      _garageModel = GarageModel(
+        name: snapshot['name'],
+        address: snapshot['address'],
+        phoneNumber: snapshot['phoneNumber'],
+        garageLogo: snapshot['garageLogo'],
+        createdAt: snapshot['createdAt'],
+        uid: snapshot['uid'],
+      );
+      _uid = garageModel.uid;
+    });
+  }
+
   // STORING DATA LOCALLY WITH SHARED PREFS
 
   Future saveGarageDatatoSP() async {
     // SP means shared prefs
     SharedPreferences s = await SharedPreferences.getInstance();
     await s.setString("garage_model", jsonEncode(garageModel.toMap()));
+  }
+
+  // GETTING DATA FROM SHARED PREFS
+  Future getDataFromSP() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    String data = s.getString("garage_model") ?? '';
+    _garageModel = GarageModel.fromMap(jsonDecode(data));
+    _uid = _garageModel!.uid;
+    notifyListeners();
+  }
+
+  // SIGN OUT
+  Future garageSignOut() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    await _firebaseAuth.signOut();
+    _isSignedIn = false;
+    notifyListeners();
+    s.clear();
   }
 }

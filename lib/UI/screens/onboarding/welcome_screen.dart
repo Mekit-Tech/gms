@@ -37,20 +37,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               child: const Text('Get Started'),
-              onPressed: () {
-                ap.isSignedIn == true // when true, then fetch shared prefs data
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      )
-                    : Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterScreen(),
-                        ),
+              onPressed: () async {
+                // Fetching data from shared prefs when signed in
+                if (ap.isSignedIn == true) {
+                  await ap.getDataFromSP().whenComplete(
+                        () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          ),
+                        },
                       );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(),
+                    ),
+                  );
+                }
               },
             ),
           ],
