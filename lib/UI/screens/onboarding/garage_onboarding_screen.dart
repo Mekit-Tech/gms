@@ -26,6 +26,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     addressController.dispose();
   }
 
+  // for selecting logo
+
+  void selectImage() async {
+    logo = await pickImage(context);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +71,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Column(
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () => selectImage(),
                 child: logo == null
                     ? const CircleAvatar(
                         backgroundColor: Colors.black87,
@@ -149,6 +156,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       uid: "",
     );
     if (logo != null) {
+      ap.saveUserDataToFirebase(
+        context: context,
+        garageModel: garageModel,
+        garageLogo: logo!,
+        onSuccess: () {},
+      );
     } else {
       showSnackBar(context, "Please upload your Logo");
     }
