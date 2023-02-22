@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "192015716382-kmnl7grive3mqf1ml536r04j12013vbv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.mekit.mekit_gms",
+            "certificate_hash": "422b6fd8823082f391f09ef39212b7f8ca31f3a8"
+          }
+        },
+        {
           "client_id": "192015716382-nojkd6qpn6locu4ejljqkurquoorokkb.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "192015716382-nojkd6qpn6locu4ejljqkurquoorokkb.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "192015716382-ol0b85pmsv2815odf4u7vvlgm1vohg2k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mekitGms"
+              }
             }
           ]
         }

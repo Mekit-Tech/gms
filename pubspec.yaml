@@ -26,6 +26,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+  firebase_messaging_platform_interface: 4.2.14
+
 flutter:
   uses-material-design: true
 
