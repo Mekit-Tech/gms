@@ -125,6 +125,19 @@ class AuthProvider extends ChangeNotifier {
         garageModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         garageModel.uid = _firebaseAuth.currentUser!.phoneNumber!;
       });
+      _garageModel = garageModel;
+
+      // UPLOAD TO DATABASE
+
+      await _firebaseFirestore
+          .collection("garages")
+          .doc(_uid)
+          .set(garageModel.toMap())
+          .then((value) {
+        onSuccess();
+        _isLoading = false;
+        notifyListeners();
+      });
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message.toString());
       _isLoading = false;
