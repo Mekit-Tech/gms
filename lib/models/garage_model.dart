@@ -1,10 +1,10 @@
 class GarageModel {
-  final String name;
-  final String address;
-  final String phoneNumber;
-  final String garageLogo;
-  final String createdAt;
-  final String uid;
+  String name;
+  String address;
+  String phoneNumber;
+  String garageLogo;
+  String createdAt;
+  String uid;
 
   GarageModel({
     required this.name,

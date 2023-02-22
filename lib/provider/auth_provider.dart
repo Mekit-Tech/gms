@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/onboarding/otp_screen.dart';
 import 'package:mekit_gms/utils/utils.dart';
@@ -16,9 +17,12 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? _uid;
   String get uid => _uid!;
+  GarageModel? _garageModel;
+  GarageModel get garageModel => _garageModel!;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
   AuthProvider() {
     checkSign();
@@ -112,10 +116,25 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     _isLoading = true;
     notifyListeners();
-    try {} on FirebaseAuthException catch (e) {
+    try {
+      // UPLOADING LOGO TO FIREBASE STORAGE
+      await storeFileToStorage("garageLogo/$_uid", garageLogo).then((value) {
+        garageModel.garageLogo = value;
+        garageModel.createdAt = DateTime.now().microsecondsSinceEpoch.toString()
+        garageModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
+        garageModel.uid = _firebaseAuth.currentUser!.phoneNumber!;
+      });
+    } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message.toString());
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<String> storeFileToStorage(String ref, File file) async {
+    UploadTask uploadTask = _firebaseStorage.ref().child(ref).putFile(file);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
   }
 }
