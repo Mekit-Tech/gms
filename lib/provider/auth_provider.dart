@@ -120,7 +120,8 @@ class AuthProvider extends ChangeNotifier {
       // UPLOADING LOGO TO FIREBASE STORAGE
       await storeFileToStorage("garageLogo/$_uid", garageLogo).then((value) {
         garageModel.garageLogo = value;
-        garageModel.createdAt = DateTime.now().microsecondsSinceEpoch.toString()
+        garageModel.createdAt =
+            DateTime.now().microsecondsSinceEpoch.toString();
         garageModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         garageModel.uid = _firebaseAuth.currentUser!.phoneNumber!;
       });
