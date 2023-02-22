@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mekit_gms/UI/screens/onboarding/garage_onboarding_screen.dart';
@@ -15,6 +17,7 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  int start = 30; // OTP Timer
   String? otpCode;
   @override
   Widget build(BuildContext context) {
@@ -110,7 +113,11 @@ class _OtpScreenState extends State<OtpScreen> {
                       },
                     ),
                     const SizedBox(height: 40),
-                    const Text("Resend OTP"),
+                    GestureDetector(
+                      child: Text(
+                        "Resend OTP in $start secounds",
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -140,5 +147,21 @@ class _OtpScreenState extends State<OtpScreen> {
             }
           });
         });
+  }
+
+  // TIMER FOR OTP EXPIRY
+  void startTimer() {
+    const onsec = Duration(seconds: 1);
+    Timer timer = Timer.periodic(onsec, (timer) {
+      if (start == 0) {
+        setState(() {
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          start--;
+        });
+      }
+    });
   }
 }
