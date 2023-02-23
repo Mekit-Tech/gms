@@ -114,7 +114,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
               ),
               child: Row(
                 children: [
-                  const Text("Spare Part"),
+                  const Text("Parts"),
                   IconButton(
                     onPressed: () {
                       // GENERATE PDF BILL FROM THE ADDED LIST OF PARTS AND LABOUR
