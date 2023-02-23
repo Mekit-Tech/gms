@@ -28,13 +28,15 @@ class AuthProvider extends ChangeNotifier {
     checkSign();
   }
 
+  // CHECK IS THE GARAGE IS SIGNED IN ALREADY
+
   void checkSign() async {
     final SharedPreferences s = await SharedPreferences.getInstance();
     _isSignedIn = s.getBool("is_signedin") ?? false;
     notifyListeners();
   }
 
-  // IF THE USER IS SIGNED IN ALREADY - STAYS SIGNED IN
+  // IF THE GARAGE IS SIGNED IN ALREADY - STAYS SIGNED IN
 
   Future setSignIn() async {
     final SharedPreferences s = await SharedPreferences.getInstance();
