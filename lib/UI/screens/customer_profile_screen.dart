@@ -117,7 +117,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   const Text("Parts"),
                   IconButton(
                     onPressed: () {
-                      // GENERATE PDF BILL FROM THE ADDED LIST OF PARTS AND LABOUR
+                      // GENERATE PDF BILL FROM THE ADDED LIST OF PARTS AND LABOR
                       
                     },
                     icon: const Icon(Icons.picture_as_pdf_rounded),
