@@ -17,6 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^0.8.6+2
+  open_document: ^1.0.6+2
+  path_provider: ^2.0.13
   pdf: ^3.9.0
   pinput: ^2.2.16
   provider: ^6.0.5

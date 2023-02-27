@@ -208,3 +208,4 @@ class AuthProvider extends ChangeNotifier {
     s.clear();
   }
 }
+
