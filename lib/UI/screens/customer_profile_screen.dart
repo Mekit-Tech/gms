@@ -118,10 +118,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   const Text("Parts"),
                   IconButton(
                     onPressed: () async {
-                      // GENERATE PDF BILL FROM THE ADDED LIST OF PARTS AND LABOR
-                      // final data = await service.createInvoice();
-                      // service.savePDFFile("invoice_$number", data);
-                      // number++;
+                      
                     },
                     icon: const Icon(Icons.picture_as_pdf_rounded),
                   )
