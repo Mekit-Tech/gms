@@ -20,7 +20,6 @@ dependencies:
   open_document: ^1.0.6+2
   path_provider: ^2.0.13
   pdf: ^3.9.0
-  pinput: ^2.2.16
   provider: ^6.0.5
   shared_preferences: ^2.0.17
 
