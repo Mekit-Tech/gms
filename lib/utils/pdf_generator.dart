@@ -19,6 +19,7 @@ class PDFGenerator {
         },
       ),
     );
+    
     return pdf.save();
   }
 }
