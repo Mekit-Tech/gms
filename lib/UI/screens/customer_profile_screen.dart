@@ -115,7 +115,13 @@ class _VehicleProfileState extends State<VehicleProfile> {
               ),
               child: Row(
                 children: const [
-                  Text("Parts"),
+                  Text(
+                    "Parts & Labor",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
                 ],
               ),
             ),
