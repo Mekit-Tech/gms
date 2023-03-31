@@ -114,12 +114,8 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 ),
               ),
               child: Row(
-                children: [
-                  const Text("Parts"),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.picture_as_pdf_rounded),
-                  )
+                children: const [
+                  Text("Parts"),
                 ],
               ),
             ),
