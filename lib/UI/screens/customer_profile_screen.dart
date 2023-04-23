@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/utils/pdf_generator.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 // ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
@@ -9,6 +12,48 @@ class VehicleProfile extends StatefulWidget {
   @override
   State<VehicleProfile> createState() => _VehicleProfileState();
 }
+class FirestoreExample extends StatefulWidget {
+  @override
+  _FirestoreExampleState createState() => _FirestoreExampleState();
+}
+
+class _FirestoreExampleState extends State<FirestoreExample> {
+  String _customerName = '';
+  String _rtoNumber = '';
+
+  Future<void> _generatePDF() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (context) => pw.Center(
+          child: pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.center,
+            children: [
+              pw.Text('Customer Name: $_customerName', style: pw.TextStyle(fontSize: 24)),
+              pw.Text('RTO Number: $_rtoNumber', style: pw.TextStyle(fontSize: 24)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/example.pdf');
+    await file.writeAsBytes(pdf.save());
+  }
+
+  void _getCustomerData() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc('CUSTOMER_DOCUMENT_ID')
+        .get();
+    final data = snapshot.data();
+    setState(() {
+      _customerName = data['customer_name'];
+      _rtoNumber = data['rto_number'];
+    });
+  }
 
 class _VehicleProfileState extends State<VehicleProfile> {
   @override
@@ -47,7 +92,10 @@ class _VehicleProfileState extends State<VehicleProfile> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () {},
+          onPressed: () {
+            await _getCustomerData();
+                await _generatePDF();
+          },
           child: const Icon(
             Icons.arrow_right_outlined,
           ),
