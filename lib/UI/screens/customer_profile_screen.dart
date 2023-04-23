@@ -49,7 +49,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ),
           onPressed: () {},
           child: const Icon(
-            Icons.add,
+            Icons.arrow_right_outlined,
           ),
         ),
       ),
