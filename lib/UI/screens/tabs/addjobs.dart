@@ -9,23 +9,6 @@ class AddJobs extends StatefulWidget {
   State<AddJobs> createState() => _AddJobsState();
 }
 
-GlobalKey<FormState> contactkey = GlobalKey<FormState>();
-
-TextEditingController namecontroller = TextEditingController();
-TextEditingController phonenumbercontroller = TextEditingController();
-TextEditingController odoreadingcontroller = TextEditingController();
-TextEditingController regnocontroller = TextEditingController();
-
-String? name;
-String? phone;
-String? regno;
-String? odoreading;
-
-TextStyle mystyle = const TextStyle(
-  fontSize: 20,
-  fontWeight: FontWeight.w500,
-);
-
 class _AddJobsState extends State<AddJobs> {
   @override
   Widget build(BuildContext context) {
