@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../utils/allcaps.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/card_widget.dart';
 import '../customer_profile_screen.dart';
