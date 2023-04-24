@@ -51,7 +51,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
             borderRadius: BorderRadius.circular(10),
           ),
           onPressed: () {
-           // Call Funtion
+           // Add Logic
           },
           child: const Icon(
             Icons.arrow_right_outlined,
