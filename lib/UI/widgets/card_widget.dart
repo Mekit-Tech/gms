@@ -23,7 +23,7 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
             ),
           ),
           Text(
-            doc["rto_number"],
+            doc["car_model"],
             style: const TextStyle(
               color: Colors.black,
               fontSize: 15,

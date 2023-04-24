@@ -15,11 +15,13 @@ class _AddNewState extends State<AddNew> {
   TextEditingController phonenumbercontroller = TextEditingController();
   TextEditingController odoreadingcontroller = TextEditingController();
   TextEditingController regnocontroller = TextEditingController();
+  TextEditingController carmodelcontroller = TextEditingController();
 
   String? name;
   String? phone;
   String? regno;
   String? odoreading;
+  String? carmodel;
 
   TextStyle mystyle = const TextStyle(
     fontSize: 20,
@@ -51,6 +53,7 @@ class _AddNewState extends State<AddNew> {
                     "customer_name": namecontroller.text,
                     "phone_no": phonenumbercontroller.text,
                     "odo_reading": odoreadingcontroller.text,
+                    "car_model": carmodelcontroller.text,
                   }).then((value) {
                     Navigator.pop(context);
                   }).catchError((error) =>
@@ -136,6 +139,38 @@ class _AddNewState extends State<AddNew> {
                                 ),
                               ),
                               hintText: "MH 01 AB 0007"),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Car Model",
+                          style: mystyle,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        TextFormField(
+                          controller: carmodelcontroller,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Enter Vehicle Brand and Model";
+                            }
+                            return null;
+                          },
+                          onSaved: (val) {
+                            setState(() {
+                              carmodel = val;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              hintText: "Honda City"),
                         ),
                         const SizedBox(
                           height: 20,
