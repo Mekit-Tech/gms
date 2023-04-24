@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/customer_profile_screen.dart';
 import 'package:mekit_gms/UI/screens/tabs/addjobs.dart';
 import 'package:mekit_gms/UI/screens/tabs/contacts.dart';
+import 'package:mekit_gms/UI/screens/tabs/finance.dart';
 import 'package:mekit_gms/UI/widgets/card_widget.dart';
 
 // New Home
@@ -113,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: const TabBarView(children: [
           AddJobs(),
-          AddJobs(),
+          MoneyScreen(),
           CustomerContacts(),
         ]),
       ),
