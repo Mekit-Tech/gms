@@ -14,7 +14,7 @@ class PDFGenerator {
       pw.Page(
         build: (pw.Context context) {
           return pw.Center(
-            child: pw.Text("Hello World"),
+            child: pw.Text("Invoice 001"),
           );
         },
       ),
