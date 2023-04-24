@@ -51,6 +51,47 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+          bottom: TabBar(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.black),
+            ),
+            tabs: [
+              Tab(
+                height: 40,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: const Align(
+                    alignment: Alignment.center,
+                    child: Icon(Icons.home_outlined),
+                  ),
+                ),
+              ),
+              Tab(
+                height: 40,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: const Align(
+                    alignment: Alignment.center,
+                    child: Icon(Icons.payments_outlined),
+                  ),
+                ),
+              ),
+              Tab(
+                height: 40,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: const Align(
+                    alignment: Alignment.center,
+                    child: Icon(Icons.people),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         floatingActionButton: Theme(
           data: ThemeData(
@@ -67,39 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection("cars").snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            //checking the connection state, if we still load the data we display a progress bar
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: GridView(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  children: snapshot.data!.docs
-                      .map((cars) => noteCard(() {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VehicleProfile(cars),
-                              ),
-                            );
-                          }, cars))
-                      .toList(),
-                ),
-              );
-            }
-            return const Text(
-              "You have no cars",
-            );
-          },
         ),
       ),
     );
