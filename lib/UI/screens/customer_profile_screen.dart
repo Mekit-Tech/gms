@@ -51,7 +51,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
             borderRadius: BorderRadius.circular(10),
           ),
           onPressed: () {
-           // Add Logic
+            // Add Logic
           },
           child: const Icon(
             Icons.arrow_right_outlined,
@@ -93,15 +93,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
                             const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.call_outlined),
-                      onPressed: () {
-                        // TODO: Add button onPressed action here
-                      },
-                    ),
                   ),
                 ],
               ),
