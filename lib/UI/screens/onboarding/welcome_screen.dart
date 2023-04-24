@@ -31,12 +31,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Welcome Screen!',
+              'Get Started!',
               style: TextStyle(fontSize: 24.0),
             ),
             const SizedBox(height: 20.0),
-            ElevatedButton(
-              child: const Text('Get Started'),
+            ElevatedButton (
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue[800],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
               onPressed: () async {
                 // Fetching data from shared prefs when signed in
                 if (ap.isSignedIn == true) {
@@ -59,6 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   );
                 }
               },
+              child: const Text('Get Started'),
             ),
           ],
         ),
