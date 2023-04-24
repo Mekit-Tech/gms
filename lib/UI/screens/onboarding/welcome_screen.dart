@@ -35,37 +35,41 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: TextStyle(fontSize: 24.0),
             ),
             const SizedBox(height: 20.0),
-            ElevatedButton (
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue[800],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            SizedBox(
+              width: 200,
+              height: 60,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue[800],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-              ),
-              onPressed: () async {
-                // Fetching data from shared prefs when signed in
-                if (ap.isSignedIn == true) {
-                  await ap.getDataFromSP().whenComplete(
-                        () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
+                onPressed: () async {
+                  // Fetching data from shared prefs when signed in
+                  if (ap.isSignedIn == true) {
+                    await ap.getDataFromSP().whenComplete(
+                          () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
                             ),
-                          ),
-                        },
-                      );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterScreen(),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Get Started'),
+                          },
+                        );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('---->'),
+              ),
             ),
           ],
         ),
