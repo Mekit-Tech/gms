@@ -12,48 +12,6 @@ class VehicleProfile extends StatefulWidget {
   @override
   State<VehicleProfile> createState() => _VehicleProfileState();
 }
-class FirestoreExample extends StatefulWidget {
-  @override
-  _FirestoreExampleState createState() => _FirestoreExampleState();
-}
-
-class _FirestoreExampleState extends State<FirestoreExample> {
-  String _customerName = '';
-  String _rtoNumber = '';
-
-  Future<void> _generatePDF() async {
-    final pdf = pw.Document();
-
-    pdf.addPage(
-      pw.Page(
-        build: (context) => pw.Center(
-          child: pw.Column(
-            mainAxisAlignment: pw.MainAxisAlignment.center,
-            children: [
-              pw.Text('Customer Name: $_customerName', style: pw.TextStyle(fontSize: 24)),
-              pw.Text('RTO Number: $_rtoNumber', style: pw.TextStyle(fontSize: 24)),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/example.pdf');
-    await file.writeAsBytes(pdf.save());
-  }
-
-  void _getCustomerData() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('customers')
-        .doc('CUSTOMER_DOCUMENT_ID')
-        .get();
-    final data = snapshot.data();
-    setState(() {
-      _customerName = data['customer_name'];
-      _rtoNumber = data['rto_number'];
-    });
-  }
 
 class _VehicleProfileState extends State<VehicleProfile> {
   @override
@@ -93,8 +51,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
             borderRadius: BorderRadius.circular(10),
           ),
           onPressed: () {
-            await _getCustomerData();
-                await _generatePDF();
+           // Call Funtion
           },
           child: const Icon(
             Icons.arrow_right_outlined,
