@@ -96,27 +96,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 2,
-                ),
-              ),
-              child: Row(
-                children: const [
-                  Text(
-                    "Parts & Labor",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            
             const SizedBox(
               height: 20,
             ),
