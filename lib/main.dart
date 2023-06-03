@@ -8,7 +8,9 @@ import 'UI/screens/new_customer_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp();
+  
   runApp(const MyApp());
 }
 
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthProvider(),
         ),
       ],
+      
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const WelcomeScreen(),

@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mekit_gms/UI/screens/pdf_generator.dart';
+
+
 
 // ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
@@ -7,10 +12,13 @@ class VehicleProfile extends StatefulWidget {
   QueryDocumentSnapshot doc;
   @override
   State<VehicleProfile> createState() => _VehicleProfileState();
+  
 }
 
 class _VehicleProfileState extends State<VehicleProfile> {
+  
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,8 +54,14 @@ class _VehicleProfileState extends State<VehicleProfile> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () {
+          onPressed: () async {
             // Add Logic
+            var data = await generatePdf(widget.doc);
+            final String dirPath =
+                "/Users/vedantsuryawanshi/Documents/mekit-gms/mekit_gms/lib/UI/screens/";
+            await Directory(dirPath).create(recursive: true);
+            final filePath = "$dirPath/file1.pdf";
+            print(filePath);
           },
           child: const Icon(
             Icons.arrow_right_outlined,
@@ -96,7 +110,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
             const SizedBox(
               height: 20,
             ),
-            
             const SizedBox(
               height: 20,
             ),
