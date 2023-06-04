@@ -3,22 +3,17 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/pdf_generator.dart';
+import 'package:path_provider/path_provider.dart';
 
-
-
-// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
   QueryDocumentSnapshot doc;
   @override
   State<VehicleProfile> createState() => _VehicleProfileState();
-  
 }
 
 class _VehicleProfileState extends State<VehicleProfile> {
-  
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,11 +51,13 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ),
           onPressed: () async {
             // Add Logic
+
             var data = await generatePdf(widget.doc);
-            final String dirPath =
-                "/Users/vedantsuryawanshi/Documents/mekit-gms/mekit_gms/lib/UI/screens/";
-            await Directory(dirPath).create(recursive: true);
-            final filePath = "$dirPath/file1.pdf";
+            Directory appDocDirectory =
+                await getApplicationDocumentsDirectory();
+            String dirPath = '${appDocDirectory.path}/pdfs/';
+            await File('$dirPath/file1.pdf').create(recursive: true);
+            String filePath = 'root.path/file1.pdf';
             print(filePath);
           },
           child: const Icon(
@@ -108,10 +105,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
               ),
             ),
             const SizedBox(
-              height: 20,
-            ),
-            const SizedBox(
-              height: 20,
+              height: 10,
             ),
             Container(
               padding: const EdgeInsets.all(20),
@@ -122,10 +116,118 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   width: 2,
                 ),
               ),
-              child: Row(
-                children: const [
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                   Text(
                     "Parts & Labor",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Engine Oil           1.5 L          Rs 2500 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Air Filter               1               Rs 1000 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Oil Filter               1               Rs 1000 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Brake Pads          4               Rs 2000 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Sprak Plugs         2               Rs 2000 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "PMS                      1               Rs 3500 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 2,
+                ),
+              ),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Total",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Parts                                   Rs 12000 ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Labour                                  Rs 3500 ",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,

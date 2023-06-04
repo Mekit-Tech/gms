@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdf/pdf.dart';
+import 'customer_profile_screen.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 generatePdf(QueryDocumentSnapshot doc) async {
@@ -17,5 +16,6 @@ generatePdf(QueryDocumentSnapshot doc) async {
       },
     ),
   );
-  return pdf.save();
+  print(firebaseInstance);
+  return pdf.toString();
 }
