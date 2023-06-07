@@ -207,7 +207,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Total",
+                    "Total                                    Rs 15500 ",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
