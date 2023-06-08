@@ -5,7 +5,6 @@ import 'package:pdf/widgets.dart' as pw;
 
 generatePdf(QueryDocumentSnapshot doc) async {
   String firebaseInstance = "customer_name";
-  print(doc.data());
   final pdf = pw.Document();
   pdf.addPage(
     pw.Page(
@@ -16,6 +15,5 @@ generatePdf(QueryDocumentSnapshot doc) async {
       },
     ),
   );
-  print(firebaseInstance);
-  return pdf.toString();
+  return pdf.save();
 }
