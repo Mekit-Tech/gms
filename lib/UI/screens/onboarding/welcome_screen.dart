@@ -51,15 +51,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   // Fetching data from shared prefs when signed in
                   if (ap.isSignedIn == true) {
                     await ap.getDataFromSP().whenComplete(
-                          () => {
-                            Navigator.push(
+                          () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const HomeScreen(),
                               ),
-                            ),
-                          },
-                        );
+                            ),);
                   } else {
                     Navigator.push(
                       context,

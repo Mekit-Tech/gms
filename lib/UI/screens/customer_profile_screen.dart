@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/pdf_generator.dart';
 import 'package:path_provider/path_provider.dart';
 
+// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
   QueryDocumentSnapshot doc;
