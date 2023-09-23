@@ -43,10 +43,9 @@ class _VehicleProfileState extends State<VehicleProfile> {
               }
 
               final int carCount = snapshot.data!.docs.length;
-              print("Car Count: $carCount"); // Print the count for debugging
 
               return Padding(
-                padding: EdgeInsets.only(top: 22.0, right: 20),
+                padding: const EdgeInsets.only(top: 22.0, right: 20),
                 child: Text(
                   carCount.toString(),
                   style: const TextStyle(
