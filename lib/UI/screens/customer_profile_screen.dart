@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/pdf_generator.dart';
 import 'package:path_provider/path_provider.dart';
 
+// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
   QueryDocumentSnapshot doc;
@@ -80,6 +81,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
           onPressed: () async {
             // Add Logic
 
+            // ignore: unused_local_variable
             var data = await generatePdf(widget.doc);
             Directory appDocDirectory =
                 await getApplicationDocumentsDirectory();
