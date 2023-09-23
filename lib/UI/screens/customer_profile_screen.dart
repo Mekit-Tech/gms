@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/pdf_generator.dart';
 import 'package:path_provider/path_provider.dart';
 
-// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
   QueryDocumentSnapshot doc;
@@ -29,6 +28,35 @@ class _VehicleProfileState extends State<VehicleProfile> {
           child: Image.asset('assets/icons/mekitblacklogo.png'),
         ),
         actions: [
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection("cars").snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                print("Error: ${snapshot.error}");
+                return Icon(Icons.error_outline);
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("Connection state is waiting.");
+                return CircularProgressIndicator();
+              }
+
+              final int carCount = snapshot.data!.docs.length;
+              print("Car Count: $carCount"); // Print the count for debugging
+
+              return Padding(
+                padding: EdgeInsets.only(top: 22.0, right: 20),
+                child: Text(
+                  carCount.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+              );
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: SizedBox(
@@ -53,7 +81,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
           onPressed: () async {
             // Add Logic
 
-            // ignore: unused_local_variable
             var data = await generatePdf(widget.doc);
             Directory appDocDirectory =
                 await getApplicationDocumentsDirectory();
