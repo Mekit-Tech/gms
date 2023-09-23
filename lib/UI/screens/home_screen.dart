@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/tabs/addjobs.dart';
 import 'package:mekit_gms/UI/screens/tabs/contacts.dart';
 import 'package:mekit_gms/UI/screens/tabs/finance.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // New Home
 
@@ -31,16 +31,34 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Image.asset('assets/icons/mekitblacklogo.png'),
           ),
           actions: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24, right: 10),
-              child: Text(
-                "0",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection("cars").snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  print("Error: ${snapshot.error}");
+                  return Icon(Icons.error_outline);
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  print("Connection state is waiting.");
+                  return CircularProgressIndicator();
+                }
+
+                final int carCount = snapshot.data!.docs.length;
+                print("Car Count: $carCount"); // Print the count for debugging
+
+                return Padding(
+                  padding: EdgeInsets.only(top: 24.0, right: 20),
+                  child: Text(
+                    carCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(right: 20),
