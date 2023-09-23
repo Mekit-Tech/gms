@@ -53,6 +53,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
           onPressed: () async {
             // Add Logic
 
+            // ignore: unused_local_variable
             var data = await generatePdf(widget.doc);
             Directory appDocDirectory =
                 await getApplicationDocumentsDirectory();
