@@ -160,63 +160,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    "Engine Oil           1.5 L          Rs 2500 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Air Filter               1               Rs 1000 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Oil Filter               1               Rs 1000 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Brake Pads          4               Rs 2000 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Sprak Plugs         2               Rs 2000 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "PMS                      1               Rs 3500 ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -237,7 +180,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Total                                    Rs 15500 ",
+                    "Total",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -247,7 +190,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                     height: 20,
                   ),
                   Text(
-                    "Parts                                   Rs 12000 ",
+                    "Parts",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -257,7 +200,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                     height: 20,
                   ),
                   Text(
-                    "Labour                                  Rs 3500 ",
+                    "Labour",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
