@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         home: const WelcomeScreen(),
         routes: {
           'homepage': (context) => const HomeScreen(),
-          'newcustomer': (context) => const AddNew(),
+          'newcustomer': (context) => const AddNew(), 
         },
       ),
     );

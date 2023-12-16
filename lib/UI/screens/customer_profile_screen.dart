@@ -146,26 +146,35 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   width: 2,
                 ),
               ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "Parts & Labor",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Parts & Labor",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          // Add logic for handling the add button press.
+                        },
+                        icon: const Icon(Icons.add, color: Colors.black,),
+                      ),
+                    ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
-                  ),
-                ],
-              ),
             ),
+              ],),),
             const SizedBox(
               height: 10,
             ),
+          
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
