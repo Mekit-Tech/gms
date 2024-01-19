@@ -170,7 +170,9 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   const SizedBox(
                     height: 20,
             ),
-              ],),),
+          ],
+        ),
+      ),
             const SizedBox(
               height: 10,
             ),
