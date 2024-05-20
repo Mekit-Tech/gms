@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 print("Car Count: $carCount"); // Print the count for debugging
 
                 return Padding(
-                  padding: const EdgeInsets.only(top: 22.0, right: 20),
+                  padding: const EdgeInsets.only(top: 7.0, right: 20),
                   child: Text(
                     carCount.toString(),
                     style: const TextStyle(
