@@ -120,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: FloatingActionButton(
             child: const Icon(
               Icons.add,
+              color: Colors.white,
             ),
             onPressed: () {
               setState(() {
