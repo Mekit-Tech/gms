@@ -123,7 +123,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                           fontSize: 21,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 2),
                       Text(
                         widget.doc["rto_number"],
                         style:
@@ -163,20 +163,22 @@ class _VehicleProfileState extends State<VehicleProfile> {
                         onPressed: () {
                           // Add logic for handling the add button press.
                         },
-                        icon: const Icon(Icons.add, color: Colors.black,),
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(
                     height: 20,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
             const SizedBox(
               height: 10,
             ),
-          
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(

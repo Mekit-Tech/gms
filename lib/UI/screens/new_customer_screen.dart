@@ -13,14 +13,14 @@ class _AddNewState extends State<AddNew> {
 
   TextEditingController namecontroller = TextEditingController();
   TextEditingController phonenumbercontroller = TextEditingController();
-  TextEditingController odoreadingcontroller = TextEditingController();
+  TextEditingController chassisnumbercontroller = TextEditingController();
   TextEditingController regnocontroller = TextEditingController();
   TextEditingController carmodelcontroller = TextEditingController();
 
   String? name;
   String? phone;
   String? regno;
-  String? odoreading;
+  String? chassisnumber;
   String? carmodel;
 
   TextStyle mystyle = const TextStyle(
@@ -33,9 +33,12 @@ class _AddNewState extends State<AddNew> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: Colors.black,
+        backgroundColor: Color.fromARGB(255, 48, 217, 163),
         elevation: 0.0,
-        title: const Text("Add Customer"),
+        title: const Text(
+          "Add Customer",
+          selectionColor: Colors.white,
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -52,7 +55,7 @@ class _AddNewState extends State<AddNew> {
                     "rto_number": regnocontroller.text,
                     "customer_name": namecontroller.text,
                     "phone_no": phonenumbercontroller.text,
-                    "odo_reading": odoreadingcontroller.text,
+                    "chassis_number": chassisnumbercontroller.text,
                     "car_model": carmodelcontroller.text,
                   }).then((value) {
                     Navigator.pop(context);
@@ -209,24 +212,24 @@ class _AddNewState extends State<AddNew> {
                           height: 20,
                         ),
                         Text(
-                          "KMs Reading",
+                          "Chassis Number",
                           style: mystyle,
                         ),
                         const SizedBox(
                           height: 5,
                         ),
                         TextFormField(
-                          controller: odoreadingcontroller,
+                          controller: chassisnumbercontroller,
                           keyboardType: TextInputType.number,
                           validator: (val) {
                             if (val!.isEmpty) {
-                              return "Enter Odometer Reading";
+                              return "Enter Chassis Number";
                             }
                             return null;
                           },
                           onSaved: (val) {
                             setState(() {
-                              odoreading = val;
+                              chassisnumber = val;
                             });
                           },
                           decoration: const InputDecoration(
