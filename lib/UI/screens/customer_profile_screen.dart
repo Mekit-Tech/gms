@@ -46,7 +46,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
               final int carCount = snapshot.data!.docs.length;
 
               return Padding(
-                padding: const EdgeInsets.only(top: 22.0, right: 20),
+                padding: const EdgeInsets.only(top: 5.0, right: 20),
                 child: Text(
                   carCount.toString(),
                   style: const TextStyle(
