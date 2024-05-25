@@ -20,8 +20,6 @@ final TextEditingController amountController = TextEditingController();
 final TextEditingController labourNameController = TextEditingController();
 final TextEditingController labourCostController = TextEditingController();
 
-int _currentQuantity = 1; // State variable for parts quantity
-
 onPressedParts(BuildContext context) async {
   final newPart = await _showAddPartsPopup(context);
   if (newPart != null) {
