@@ -147,7 +147,7 @@ class _AddNewState extends State<AddNew> {
                           height: 20,
                         ),
                         Text(
-                          "Car Model",
+                          "Car Make / Model",
                           style: mystyle,
                         ),
                         const SizedBox(
