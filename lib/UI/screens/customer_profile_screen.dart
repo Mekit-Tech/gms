@@ -181,7 +181,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
 
               if (snapshot.connectionState == ConnectionState.waiting) {
                 print("Connection state is waiting.");
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
 
               final int carCount = snapshot.data!.docs.length;
