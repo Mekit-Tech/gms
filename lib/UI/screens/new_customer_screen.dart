@@ -239,7 +239,7 @@ class _AddNewState extends State<AddNew> {
                                 color: Colors.black,
                               ),
                             ),
-                            hintText: "25,000 KMs",
+                            hintText: "1234567891234567",
                           ),
                         ),
                       ],
