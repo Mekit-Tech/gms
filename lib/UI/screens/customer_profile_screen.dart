@@ -53,25 +53,26 @@ Future<Labour?> _showAddLabourPopup(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Add Labour'),
+        title: const Text('Add Labour'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: labourNameController,
-              decoration: InputDecoration(labelText: 'Labour Name/Description'),
+              decoration:
+                  const InputDecoration(labelText: 'Labour Name/Description'),
             ),
             TextField(
               controller: labourCostController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Cost'),
+              decoration: const InputDecoration(labelText: 'Cost'),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -90,7 +91,7 @@ Future<Labour?> _showAddLabourPopup(BuildContext context) async {
                     cost: labourCost,
                   ));
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           ),
         ],
       );
@@ -107,7 +108,7 @@ Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Add Parts'),
+        title: const Text('Add Parts'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
