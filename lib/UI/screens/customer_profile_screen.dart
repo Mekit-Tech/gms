@@ -131,7 +131,7 @@ Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
