@@ -114,7 +114,7 @@ Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
           children: [
             TextField(
               controller: partNameController,
-              decoration: InputDecoration(labelText: 'Part Name'),
+              decoration: const InputDecoration(labelText: 'Part Name'),
             ),
             TextField(
               controller: amountController,
