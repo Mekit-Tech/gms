@@ -176,7 +176,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 print("Error: ${snapshot.error}");
-                return Icon(Icons.error_outline);
+                return const Icon(Icons.error_outline);
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
