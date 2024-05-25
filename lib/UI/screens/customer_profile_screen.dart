@@ -124,7 +124,7 @@ Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
             TextField(
               controller: quantityController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Quantity'),
+              decoration: const InputDecoration(labelText: 'Quantity'),
             ),
           ],
         ),
