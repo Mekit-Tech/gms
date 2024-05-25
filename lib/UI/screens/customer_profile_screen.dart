@@ -146,7 +146,7 @@ Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
                     quantity: quantity,
                   ));
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           ),
         ],
       );
