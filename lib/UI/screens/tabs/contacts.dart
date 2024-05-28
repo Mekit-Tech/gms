@@ -58,9 +58,6 @@ class CustomerContacts extends StatelessWidget {
       const ContactsWidget(),
       const ContactsWidget(),
       const ContactsWidget(),
-      const ContactsWidget(),
-      const ContactsWidget(),
-      const ContactsWidget(),
     ]);
   }
 }
