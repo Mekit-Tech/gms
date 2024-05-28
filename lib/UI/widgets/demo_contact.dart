@@ -11,10 +11,10 @@ class ContactsWidget extends StatelessWidget {
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: Colors.grey, width: 0.7)),
       ),
-      child: Column(
+      child: const Column(
         children: [
           Row(
-            children: const [
+            children: [
               Text(
                 "Adar Daruwala",
                 style: TextStyle(
@@ -26,7 +26,7 @@ class ContactsWidget extends StatelessWidget {
             ],
           ),
           Row(
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.only(top: 5),
                 child: Text(
