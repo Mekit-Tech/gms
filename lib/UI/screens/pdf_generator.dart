@@ -12,7 +12,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
 
   String customerName = dataAsMap["customer_name"] ?? "N/A";
   String rtoNumber = dataAsMap["rto_number"] ?? "N/A";
-  String model = dataAsMap["car_model"] ?? "N/A";
+  String carModel = dataAsMap["car_model"] ?? "N/A";
   String year = dataAsMap["year"]?.toString() ?? "N/A";
 
   // Create a new PDF document
@@ -20,33 +20,33 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
 
   // Process parts and labor data
   final parts = (dataAsMap["parts"] as List<dynamic>?)
-      ?.map((part) => {
-            'description': part['name'] ?? "Unknown",
-            'mrp': part['mrp']?.toString() ?? "0",
-            'qty': part['quantity']?.toString() ?? "0",
-            'total': part['total']?.toString() ?? "0"
-          })
-      .toList();
+          ?.map((part) => {
+                'description': part['name']?.toString() ?? "Unknown",
+                'mrp': part['mrp']?.toString() ?? "0",
+                'qty': part['quantity']?.toString() ?? "0",
+                'total': part['total']?.toString() ?? "0"
+              })
+          .toList() ??
+      [];
 
   final labour = (dataAsMap["labour"] as List<dynamic>?)
-      ?.map((lab) => {
-            'description': lab['name'] ?? "Unknown",
-            'cost': lab['cost']?.toString() ?? "0"
-          })
-      .toList();
+          ?.map((lab) => {
+                'description': lab['name']?.toString() ?? "Unknown",
+                'cost': lab['cost']?.toString() ?? "0"
+              })
+          .toList() ??
+      [];
 
   // Calculate total costs
-  final totalPartsCost = parts?.fold(0, (sum, part) {
-        final total = int.tryParse(part['total'] ?? '0') ?? 0;
-        return sum + total;
-      }) ??
-      0;
+  final totalPartsCost = parts.fold(0, (sum, part) {
+    final total = int.tryParse(part['total'] ?? '0') ?? 0;
+    return sum + total;
+  });
 
-  final totalLabourCost = labour?.fold(0, (sum, lab) {
-        final cost = int.tryParse(lab['cost'] ?? '0') ?? 0;
-        return sum + cost;
-      }) ??
-      0;
+  final totalLabourCost = labour.fold(0, (sum, lab) {
+    final cost = int.tryParse(lab['cost'] ?? '0') ?? 0;
+    return sum + cost;
+  });
 
   final totalEstimate = totalPartsCost + totalLabourCost;
 
@@ -62,11 +62,11 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
   contentHeight += textHeight * 4;
   contentHeight += spacingHeight;
   contentHeight += headerHeight;
-  contentHeight += (parts?.length ?? 0) * tableRowHeight;
+  contentHeight += parts.length * tableRowHeight;
   contentHeight += spacingHeight;
   contentHeight += tableRowHeight;
   contentHeight += spacingHeight;
-  contentHeight += (labour?.length ?? 0) * tableRowHeight;
+  contentHeight += labour.length * tableRowHeight;
   contentHeight += spacingHeight;
   contentHeight += tableRowHeight;
   contentHeight += spacingHeight;
@@ -147,14 +147,13 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                 cellStyle: pw.TextStyle(fontSize: 18),
                 headers: ['Item Description', 'MRP', 'Qty.', 'Total'],
                 data: parts
-                        ?.map((part) => [
-                              part['description'],
-                              '₹${part['mrp']}',
-                              part['qty'],
-                              '₹${part['total']}'
-                            ])
-                        .toList() ??
-                    [],
+                    .map((part) => [
+                          part['description'],
+                          '₹${part['mrp']}',
+                          part['qty'],
+                          '₹${part['total']}'
+                        ])
+                    .toList(),
               ),
               pw.SizedBox(height: 16),
               pw.Align(
@@ -176,10 +175,9 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                 cellStyle: pw.TextStyle(fontSize: 18),
                 headers: ['Labour', '', '', ''],
                 data: labour
-                        ?.map((lab) =>
-                            [lab['description'], '', '', '₹${lab['cost']}'])
-                        .toList() ??
-                    [],
+                    .map((lab) =>
+                        [lab['description'], '', '', '₹${lab['cost']}'])
+                    .toList(),
               ),
               pw.SizedBox(height: 16),
               pw.Align(
