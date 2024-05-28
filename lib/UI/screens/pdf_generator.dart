@@ -12,7 +12,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
 
   String customerName = dataAsMap["customer_name"] ?? "N/A";
   String rtoNumber = dataAsMap["rto_number"] ?? "N/A";
-  String model = dataAsMap["model"] ?? "N/A";
+  String model = dataAsMap["car_model"] ?? "N/A";
   String year = dataAsMap["year"]?.toString() ?? "N/A";
 
   // Create a new PDF document
@@ -114,6 +114,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
               pw.SizedBox(height: 16),
               pw.Container(
                 padding: pw.EdgeInsets.all(16),
+                width: double.infinity,
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.grey),
                 ),
@@ -133,22 +134,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                 ),
               ),
               pw.SizedBox(height: 16),
-              pw.Container(
-                padding: pw.EdgeInsets.all(16),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border.all(color: PdfColors.grey),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text('Customer Note:',
-                        style: pw.TextStyle(fontSize: 20)),
-                    pw.Text('• NOTE', style: pw.TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 16),
-              pw.Table.fromTextArray(
+              pw.TableHelper.fromTextArray(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 headerDecoration: pw.BoxDecoration(
                   color: PdfColors.grey300,
@@ -177,7 +163,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                     style: pw.TextStyle(fontSize: 18)),
               ),
               pw.SizedBox(height: 16),
-              pw.Table.fromTextArray(
+              pw.TableHelper.fromTextArray(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 headerDecoration: pw.BoxDecoration(
                   color: PdfColors.grey300,
@@ -200,6 +186,21 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                 alignment: pw.Alignment.centerRight,
                 child: pw.Text('Total Estimate: ₹$totalEstimate',
                     style: pw.TextStyle(fontSize: 18)),
+              ),
+              pw.SizedBox(height: 16),
+              pw.Container(
+                padding: pw.EdgeInsets.all(16),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey),
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Customer Note:',
+                        style: pw.TextStyle(fontSize: 20)),
+                    pw.Text('• NOTE', style: pw.TextStyle(fontSize: 18)),
+                  ],
+                ),
               ),
               pw.SizedBox(height: 16),
               pw.Container(
