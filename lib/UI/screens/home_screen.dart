@@ -112,22 +112,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        floatingActionButton: Theme(
-          data: ThemeData(
-            colorScheme:
-                ColorScheme.fromSwatch().copyWith(secondary: Colors.black),
-          ),
-          child: FloatingActionButton(
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                Navigator.of(context).pushNamed('newcustomer');
-              });
-            },
-          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              Navigator.of(context).pushNamed('newcustomer');
+            });
+          },
+          backgroundColor: Colors.black,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ), // Set background color directly
         ),
         body: const TabBarView(children: [
           AddJobs(),
