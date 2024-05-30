@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddNew extends StatefulWidget {
   const AddNew({Key? key}) : super(key: key);
@@ -9,21 +9,18 @@ class AddNew extends StatefulWidget {
 }
 
 class _AddNewState extends State<AddNew> {
-  GlobalKey<FormState> contactkey = GlobalKey<FormState>();
+  // Define controllers for text fields
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController chassisNumberController = TextEditingController();
+  TextEditingController regNoController = TextEditingController();
+  TextEditingController carModelController = TextEditingController();
 
-  TextEditingController namecontroller = TextEditingController();
-  TextEditingController phonenumbercontroller = TextEditingController();
-  TextEditingController chassisnumbercontroller = TextEditingController();
-  TextEditingController regnocontroller = TextEditingController();
-  TextEditingController carmodelcontroller = TextEditingController();
+  // Form key for validation and saving
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String? name;
-  String? phone;
-  String? regno;
-  String? chassisnumber;
-  String? carmodel;
-
-  TextStyle mystyle = const TextStyle(
+  // TextStyle
+  final TextStyle _myStyle = const TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
@@ -33,11 +30,11 @@ class _AddNewState extends State<AddNew> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: Color.fromARGB(255, 48, 217, 163),
+        backgroundColor: const Color.fromARGB(255, 48, 217, 163),
         elevation: 0.0,
         title: const Text(
           "Add Customer",
-          selectionColor: Colors.white,
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -47,208 +44,137 @@ class _AddNewState extends State<AddNew> {
         ),
         actions: [
           IconButton(
-              onPressed: () async {
-                if (contactkey.currentState!.validate()) {
-                  contactkey.currentState!.save();
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
 
-                  FirebaseFirestore.instance.collection("cars").add({
-                    "rto_number": regnocontroller.text,
-                    "customer_name": namecontroller.text,
-                    "phone_no": phonenumbercontroller.text,
-                    "chassis_number": chassisnumbercontroller.text,
-                    "car_model": carmodelcontroller.text,
-                  }).then((value) {
-                    Navigator.pop(context);
-                  }).catchError((error) =>
-                      // ignore: avoid_print, invalid_return_type_for_catch_error
-                      print("Failed to Add New Customer due to $error"));
-                }
-              },
-              icon: const Icon(Icons.check))
+                // Add customer data to Firestore
+                await FirebaseFirestore.instance.collection("customers").add({
+                  "car_number": regNoController.text,
+                  "customer_name": nameController.text,
+                  "phone_number": phoneNumberController.text,
+                  "chassis_number": chassisNumberController.text,
+                  "car_model": carModelController.text,
+                }).then((value) {
+                  // Navigate back after adding successfully
+                  Navigator.pop(context);
+                }).catchError((error) {
+                  // Handle error if adding failed
+                  print("Failed to Add New Customer due to $error");
+                });
+              }
+            },
+            icon: const Icon(Icons.check),
+          ),
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: Form(
-                key: contactkey,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Customer Name",
-                          style: mystyle,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextFormField(
-                          controller: namecontroller,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return "Please Enter Name";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            setState(() {
-                              name = val;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: "Customer Name"),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Vehicle Registration No.",
-                          style: mystyle,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextFormField(
-                          controller: regnocontroller,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return "Enter Vehicle Number";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            setState(() {
-                              regno = val;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: "MH 01 AB 0007"),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Car Make / Model",
-                          style: mystyle,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextFormField(
-                          controller: carmodelcontroller,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return "Enter Vehicle Brand and Model";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            setState(() {
-                              carmodel = val;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: "Honda City"),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Phone Number",
-                          style: mystyle,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextFormField(
-                          controller: phonenumbercontroller,
-                          keyboardType: TextInputType.phone,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return "Enter Phone Number";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            setState(() {
-                              phone = val;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintText: "88886 57702"),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Chassis Number",
-                          style: mystyle,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextFormField(
-                          controller: chassisnumbercontroller,
-                          keyboardType: TextInputType.number,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return "Enter Chassis Number";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) {
-                            setState(() {
-                              chassisnumber = val;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                              ),
-                            ),
-                            hintText: "1234567891234567",
-                          ),
-                        ),
-                      ],
-                    ),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Customer Name",
+                  style: _myStyle,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: nameController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Please Enter Name";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Customer Name",
                   ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                Text(
+                  "Vehicle Registration No.",
+                  style: _myStyle,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: regNoController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Enter Vehicle Number";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "MH 01 AB 0007",
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Car Make / Model",
+                  style: _myStyle,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: carModelController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Enter Vehicle Brand and Model";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Honda City",
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Phone Number",
+                  style: _myStyle,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: phoneNumberController,
+                  keyboardType: TextInputType.phone,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Enter Phone Number";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "88886 57702",
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Chassis Number",
+                  style: _myStyle,
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: chassisNumberController,
+                  keyboardType: TextInputType.number,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Enter Chassis Number";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "1234567891234567",
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

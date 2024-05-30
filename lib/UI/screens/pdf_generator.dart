@@ -11,7 +11,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
   Map<String, dynamic> dataAsMap = doc.data() as Map<String, dynamic>;
 
   String customerName = dataAsMap["customer_name"] ?? "N/A";
-  String rtoNumber = dataAsMap["rto_number"] ?? "N/A";
+  String rtoNumber = dataAsMap["car_number"] ?? "N/A";
   String carModel = dataAsMap["car_model"] ?? "N/A";
   String year = dataAsMap["year"]?.toString() ?? "N/A";
 
