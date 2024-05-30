@@ -17,8 +17,8 @@ class MoneyScreen extends StatelessWidget {
           constraints: const BoxConstraints(
             maxHeight: double.infinity,
           ),
-          child: Column(
-            children: const [
+          child: const Column(
+            children: [
               Text(
                 "Bills Sent (₹70,510)",
                 style: TextStyle(
