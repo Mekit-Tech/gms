@@ -261,7 +261,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        widget.doc["rto_number"],
+                        widget.doc["car_number"],
                         style:
                             const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
