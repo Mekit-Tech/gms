@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:mekit_gms/provider/auth_provider.dart';
 
 class AddNew extends StatefulWidget {
   const AddNew({Key? key}) : super(key: key);
@@ -27,6 +29,8 @@ class _AddNewState extends State<AddNew> {
 
   @override
   Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
@@ -49,7 +53,11 @@ class _AddNewState extends State<AddNew> {
                 _formKey.currentState!.save();
 
                 // Add customer data to Firestore
-                await FirebaseFirestore.instance.collection("customers").add({
+                await FirebaseFirestore.instance
+                    .collection("garages")
+                    .doc(ap.uid) // Use the uid property
+                    .collection("customers")
+                    .add({
                   "car_number": regNoController.text,
                   "customer_name": nameController.text,
                   "phone_number": phoneNumberController.text,

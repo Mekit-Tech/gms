@@ -6,7 +6,11 @@ import 'package:open_file/open_file.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 
-Future<void> generatePdf(QueryDocumentSnapshot doc) async {
+Future<void> generatePdf(
+    QueryDocumentSnapshot doc,
+    List<Map<String, dynamic>> parts,
+    List<Map<String, dynamic>> labour,
+    double totalCost) async {
   // Extract data from Firestore document
   Map<String, dynamic> dataAsMap = doc.data() as Map<String, dynamic>;
 
@@ -19,31 +23,27 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
   final pdf = pw.Document();
 
   // Process parts and labor data
-  final parts = (dataAsMap["parts"] as List<dynamic>?)
-          ?.map((part) => {
-                'description': part['name']?.toString() ?? "Unknown",
-                'mrp': part['mrp']?.toString() ?? "0",
-                'qty': part['quantity']?.toString() ?? "0",
-                'total': part['total']?.toString() ?? "0"
-              })
-          .toList() ??
-      [];
+  final processedParts = parts
+      .map((part) => {
+            'description': part['partName'],
+            'mrp': part['amount'].toString(),
+            'qty': part['quantity'].toString(),
+            'total': (part['amount'] * part['quantity']).toString()
+          })
+      .toList();
 
-  final labour = (dataAsMap["labour"] as List<dynamic>?)
-          ?.map((lab) => {
-                'description': lab['name']?.toString() ?? "Unknown",
-                'cost': lab['cost']?.toString() ?? "0"
-              })
-          .toList() ??
-      [];
+  final processedLabour = labour
+      .map(
+          (lab) => {'description': lab['name'], 'cost': lab['cost'].toString()})
+      .toList();
 
   // Calculate total costs
-  final totalPartsCost = parts.fold(0, (sum, part) {
+  final totalPartsCost = processedParts.fold<int>(0, (sum, part) {
     final total = int.tryParse(part['total'] ?? '0') ?? 0;
     return sum + total;
   });
 
-  final totalLabourCost = labour.fold(0, (sum, lab) {
+  final totalLabourCost = processedLabour.fold<int>(0, (sum, lab) {
     final cost = int.tryParse(lab['cost'] ?? '0') ?? 0;
     return sum + cost;
   });
@@ -62,11 +62,11 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
   contentHeight += textHeight * 4;
   contentHeight += spacingHeight;
   contentHeight += headerHeight;
-  contentHeight += parts.length * tableRowHeight;
+  contentHeight += processedParts.length * tableRowHeight;
   contentHeight += spacingHeight;
   contentHeight += tableRowHeight;
   contentHeight += spacingHeight;
-  contentHeight += labour.length * tableRowHeight;
+  contentHeight += processedLabour.length * tableRowHeight;
   contentHeight += spacingHeight;
   contentHeight += tableRowHeight;
   contentHeight += spacingHeight;
@@ -146,7 +146,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
                 cellStyle: pw.TextStyle(fontSize: 18),
                 headers: ['Item Description', 'MRP', 'Qty.', 'Total'],
-                data: parts
+                data: processedParts
                     .map((part) => [
                           part['description'],
                           '₹${part['mrp']}',
@@ -174,7 +174,7 @@ Future<void> generatePdf(QueryDocumentSnapshot doc) async {
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
                 cellStyle: pw.TextStyle(fontSize: 18),
                 headers: ['Labour', '', '', ''],
-                data: labour
+                data: processedLabour
                     .map((lab) =>
                         [lab['description'], '', '', '₹${lab['cost']}'])
                     .toList(),

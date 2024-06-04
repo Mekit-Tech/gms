@@ -1,158 +1,99 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mekit_gms/UI/screens/pdf_generator.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mekit_gms/UI/screens/addparts.dart';
-import 'package:mekit_gms/UI/screens/addlabour.dart';
+import 'package:mekit_gms/UI/screens/pdf_generator.dart'; // Ensure you have this import
+import 'package:mekit_gms/UI/screens/addparts.dart'; // Ensure you have this import
+import 'package:mekit_gms/UI/screens/addlabour.dart'; // Ensure you have this import
 
-// ignore: must_be_immutable
 class VehicleProfile extends StatefulWidget {
   VehicleProfile(this.doc, {Key? key}) : super(key: key);
-  QueryDocumentSnapshot doc;
+  final QueryDocumentSnapshot doc;
+
   @override
   State<VehicleProfile> createState() => _VehicleProfileState();
 }
 
-final TextEditingController partNameController = TextEditingController();
-final TextEditingController amountController = TextEditingController();
-final TextEditingController labourNameController = TextEditingController();
-final TextEditingController labourCostController = TextEditingController();
-
-onPressedParts(BuildContext context) async {
-  final newPart = await _showAddPartsPopup(context);
-  if (newPart != null) {
-    // Validate part information (optional)
-    if (newPart.partName.isEmpty || newPart.quantity == 0) {
-      // Show error message (e.g., "Please enter part name and quantity")
-      return;
-    }
-    // Process the new part information here (e.g., add to a list)
-    print("Added part: ${newPart.partName}, quantity: ${newPart.quantity}");
-  }
-}
-
-onPressedLabour(BuildContext context) async {
-  final newLabour = await _showAddLabourPopup(context);
-  if (newLabour != null) {
-    // Validate labour information (optional)
-    if (newLabour.name.isEmpty || newLabour.cost == 0.0) {
-      // Show error message (e.g., "Please enter labour name and cost")
-      return;
-    }
-    // Process the new labour information here (e.g., add to a list)
-    print("Added labour: ${newLabour.name}, cost: ${newLabour.cost}");
-  }
-}
-
-Future<Labour?> _showAddLabourPopup(BuildContext context) async {
-  return await showDialog<Labour>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Add Labour'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: labourNameController,
-              decoration:
-                  const InputDecoration(labelText: 'Labour Name/Description'),
-            ),
-            TextField(
-              controller: labourCostController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Cost'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              final labourName = labourNameController.text;
-              final String costText = labourCostController.text;
-              // Validate cost (optional)
-              if (double.tryParse(costText) == null) {
-                // Show error message
-                return;
-              }
-              final labourCost = double.parse(costText);
-              Navigator.pop(
-                  context,
-                  Labour(
-                    name: labourName,
-                    cost: labourCost,
-                  ));
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
-  final TextEditingController partNameController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
-
-  return await showDialog<AddParts>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Add Parts'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: partNameController,
-              decoration: const InputDecoration(labelText: 'Part Name'),
-            ),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Amount'),
-            ),
-            TextField(
-              controller: quantityController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Quantity'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              final partName = partNameController.text;
-              final amount = double.tryParse(amountController.text) ?? 0.0;
-              final quantity = int.tryParse(quantityController.text) ?? 0;
-              Navigator.pop(
-                  context,
-                  AddParts(
-                    partName: partName,
-                    amount: amount,
-                    quantity: quantity,
-                  ));
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
 class _VehicleProfileState extends State<VehicleProfile> {
+  List<Map<String, dynamic>> parts = [];
+  List<Map<String, dynamic>> labour = [];
+  double totalCost = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPartsAndLabour();
+  }
+
+  void loadPartsAndLabour() async {
+    final partsSnapshot = await FirebaseFirestore.instance
+        .collection('cars')
+        .doc(widget.doc.id)
+        .collection('parts')
+        .get();
+    final labourSnapshot = await FirebaseFirestore.instance
+        .collection('cars')
+        .doc(widget.doc.id)
+        .collection('labour')
+        .get();
+
+    setState(() {
+      parts = partsSnapshot.docs.map((doc) => doc.data()).toList();
+      labour = labourSnapshot.docs.map((doc) => doc.data()).toList();
+      calculateTotalCost();
+    });
+  }
+
+  void calculateTotalCost() {
+    double total = 0.0;
+    for (var part in parts) {
+      total += part['amount'] * part['quantity'];
+    }
+    for (var lab in labour) {
+      total += lab['cost'];
+    }
+    setState(() {
+      totalCost = total;
+    });
+  }
+
+  Future<void> addPart(String partName, double amount, int quantity) async {
+    final partData = {
+      'partName': partName,
+      'amount': amount,
+      'quantity': quantity,
+    };
+
+    await FirebaseFirestore.instance
+        .collection('cars')
+        .doc(widget.doc.id)
+        .collection('parts')
+        .add(partData);
+
+    setState(() {
+      parts.add(partData);
+      calculateTotalCost();
+    });
+  }
+
+  Future<void> addLabour(String name, double cost) async {
+    final labourData = {
+      'name': name,
+      'cost': cost,
+    };
+
+    await FirebaseFirestore.instance
+        .collection('cars')
+        .doc(widget.doc.id)
+        .collection('labour')
+        .add(labourData);
+
+    setState(() {
+      labour.add(labourData);
+      calculateTotalCost();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,12 +159,13 @@ class _VehicleProfileState extends State<VehicleProfile> {
             borderRadius: BorderRadius.circular(10),
           ),
           onPressed: () async {
-            var data = await generatePdf(widget.doc);
+            var data = await generatePdf(widget.doc, parts, labour,
+                totalCost); // Modify your generatePdf function to accept parts, labour, and total cost
             Directory appDocDirectory =
                 await getApplicationDocumentsDirectory();
             String dirPath = '${appDocDirectory.path}/pdfs/';
             await File('$dirPath/file1.pdf').create(recursive: true);
-            String filePath = 'root.path/file1.pdf';
+            String filePath = '$dirPath/file1.pdf';
             print(filePath);
           },
           child: const Icon(
@@ -296,8 +238,13 @@ class _VehicleProfileState extends State<VehicleProfile> {
                             fontWeight: FontWeight.w600),
                       ),
                       IconButton(
-                        onPressed: () =>
-                            onPressedParts(context), // Pass context
+                        onPressed: () async {
+                          final newPart = await _showAddPartsPopup(context);
+                          if (newPart != null) {
+                            await addPart(newPart.partName, newPart.amount,
+                                newPart.quantity);
+                          }
+                        },
                         icon: const Icon(
                           Icons.add,
                           color: Colors.black,
@@ -305,6 +252,10 @@ class _VehicleProfileState extends State<VehicleProfile> {
                       ),
                     ],
                   ),
+                  ...parts
+                      .map((part) => Text(
+                          '${part['partName']} - ${part['quantity']} @ Rs.${part['amount']} each'))
+                      .toList(),
                 ],
               ),
             ),
@@ -334,7 +285,12 @@ class _VehicleProfileState extends State<VehicleProfile> {
                             fontWeight: FontWeight.w600),
                       ),
                       IconButton(
-                        onPressed: () => onPressedLabour(context),
+                        onPressed: () async {
+                          final newLabour = await _showAddLabourPopup(context);
+                          if (newLabour != null) {
+                            await addLabour(newLabour.name, newLabour.cost);
+                          }
+                        },
                         icon: const Icon(
                           Icons.add,
                           color: Colors.black,
@@ -342,6 +298,9 @@ class _VehicleProfileState extends State<VehicleProfile> {
                       ),
                     ],
                   ),
+                  ...labour
+                      .map((lab) => Text('${lab['name']} - Rs.${lab['cost']}'))
+                      .toList(),
                 ],
               ),
             ),
@@ -357,13 +316,13 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   width: 2,
                 ),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Total",
                         style: TextStyle(
                             color: Colors.black,
@@ -371,8 +330,8 @@ class _VehicleProfileState extends State<VehicleProfile> {
                             fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "Rs. 0",
-                        style: TextStyle(
+                        "Rs. $totalCost",
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
@@ -385,6 +344,113 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<AddParts?> _showAddPartsPopup(BuildContext context) async {
+    final TextEditingController partNameController = TextEditingController();
+    final TextEditingController amountController = TextEditingController();
+    final TextEditingController quantityController = TextEditingController();
+
+    return await showDialog<AddParts>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Parts'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: partNameController,
+                decoration: const InputDecoration(labelText: 'Part Name'),
+              ),
+              TextField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Amount'),
+              ),
+              TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Quantity'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final partName = partNameController.text;
+                final amount = double.tryParse(amountController.text) ?? 0.0;
+                final quantity = int.tryParse(quantityController.text) ?? 0;
+                Navigator.pop(
+                    context,
+                    AddParts(
+                      partName: partName,
+                      amount: amount,
+                      quantity: quantity,
+                    ));
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Labour?> _showAddLabourPopup(BuildContext context) async {
+    final TextEditingController labourNameController = TextEditingController();
+    final TextEditingController labourCostController = TextEditingController();
+
+    return await showDialog<Labour>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Labour'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: labourNameController,
+                decoration:
+                    const InputDecoration(labelText: 'Labour Name/Description'),
+              ),
+              TextField(
+                controller: labourCostController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Cost'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final labourName = labourNameController.text;
+                final String costText = labourCostController.text;
+                if (double.tryParse(costText) == null) {
+                  return;
+                }
+                final labourCost = double.parse(costText);
+                Navigator.pop(
+                    context,
+                    Labour(
+                      name: labourName,
+                      cost: labourCost,
+                    ));
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
