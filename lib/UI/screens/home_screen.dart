@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   margin: const EdgeInsets.only(right: 10, left: 10),
                   child: const Align(
                     alignment: Alignment.center,
-                    child: Icon(Icons.payments_outlined),
+                    child: Icon(Icons.people),
                   ),
                 ),
               ),
@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   margin: const EdgeInsets.only(right: 10, left: 10),
                   child: const Align(
                     alignment: Alignment.center,
-                    child: Icon(Icons.people),
+                    child: Icon(Icons.payments_outlined),
                   ),
                 ),
               ),
@@ -126,8 +126,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: const TabBarView(children: [
           AddJobs(),
-          MoneyScreen(),
           CustomerContacts(),
+          MoneyScreen(),
         ]),
       ),
     );
