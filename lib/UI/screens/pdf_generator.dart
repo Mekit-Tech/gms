@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -38,13 +39,13 @@ Future<void> generatePdf(
       .toList();
 
   // Calculate total costs
-  final totalPartsCost = processedParts.fold<int>(0, (sum, part) {
-    final total = int.tryParse(part['total'] ?? '0') ?? 0;
+  final totalPartsCost = processedParts.fold<double>(0, (sum, part) {
+    final total = double.tryParse(part['total'] ?? '0') ?? 0;
     return sum + total;
   });
 
-  final totalLabourCost = processedLabour.fold<int>(0, (sum, lab) {
-    final cost = int.tryParse(lab['cost'] ?? '0') ?? 0;
+  final totalLabourCost = processedLabour.fold<double>(0, (sum, lab) {
+    final cost = double.tryParse(lab['cost'] ?? '0') ?? 0;
     return sum + cost;
   });
 
@@ -102,10 +103,10 @@ Future<void> generatePdf(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text('Mr.$customerName',
-                            style: const pw.TextStyle(fontSize: 40)),
+                            style: pw.TextStyle(fontSize: 30)),
                         pw.SizedBox(height: 5),
                         pw.Text('$rtoNumber',
-                            style: const pw.TextStyle(fontSize: 30)),
+                            style: pw.TextStyle(fontSize: 20)),
                       ],
                     ),
                   ],
@@ -121,15 +122,15 @@ Future<void> generatePdf(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('Mekit Garage', style: pw.TextStyle(fontSize: 40)),
+                    pw.Text('Mekit Garage', style: pw.TextStyle(fontSize: 27)),
                     pw.SizedBox(height: 10),
-                    pw.Text('Job: Painting', style: pw.TextStyle(fontSize: 30)),
+                    pw.Text('Job: Painting', style: pw.TextStyle(fontSize: 20)),
                     pw.SizedBox(height: 10),
                     pw.Text('Odo: 27680 KMs',
-                        style: pw.TextStyle(fontSize: 30)),
+                        style: pw.TextStyle(fontSize: 20)),
                     pw.SizedBox(height: 10),
                     pw.Text('Date: $formattedDate',
-                        style: pw.TextStyle(fontSize: 30)),
+                        style: pw.TextStyle(fontSize: 20)),
                   ],
                 ),
               ),
@@ -149,16 +150,16 @@ Future<void> generatePdf(
                 data: processedParts
                     .map((part) => [
                           part['description'],
-                          '₹${part['mrp']}',
+                          'Rs.${part['mrp']}',
                           part['qty'],
-                          '₹${part['total']}'
+                          'Rs.${part['total']}'
                         ])
                     .toList(),
               ),
               pw.SizedBox(height: 16),
               pw.Align(
                 alignment: pw.Alignment.centerRight,
-                child: pw.Text('Total Parts Estimate: ₹$totalPartsCost',
+                child: pw.Text('Total Parts Estimate: Rs.$totalPartsCost',
                     style: pw.TextStyle(fontSize: 18)),
               ),
               pw.SizedBox(height: 16),
@@ -173,16 +174,15 @@ Future<void> generatePdf(
                 headerStyle:
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
                 cellStyle: pw.TextStyle(fontSize: 18),
-                headers: ['Labour', '', '', ''],
+                headers: ['Labour', 'Cost'],
                 data: processedLabour
-                    .map((lab) =>
-                        [lab['description'], '', '', '₹${lab['cost']}'])
+                    .map((lab) => [lab['description'], 'Rs.${lab['cost']}'])
                     .toList(),
               ),
               pw.SizedBox(height: 16),
               pw.Align(
                 alignment: pw.Alignment.centerRight,
-                child: pw.Text('Total Estimate: ₹$totalEstimate',
+                child: pw.Text('Total Estimate: Rs.$totalEstimate',
                     style: pw.TextStyle(fontSize: 18)),
               ),
               pw.SizedBox(height: 16),
@@ -197,43 +197,6 @@ Future<void> generatePdf(
                     pw.Text('Customer Note:',
                         style: pw.TextStyle(fontSize: 20)),
                     pw.Text('• NOTE', style: pw.TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 16),
-              pw.Container(
-                padding: pw.EdgeInsets.all(16),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border.all(color: PdfColors.grey),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text('Mechanic Remarks:',
-                        style: pw.TextStyle(fontSize: 20)),
-                    pw.Text('• NOTE', style: pw.TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 16),
-              pw.Container(
-                padding: pw.EdgeInsets.all(16),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border.all(color: PdfColors.grey),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text('For any help or assistance,',
-                        style: pw.TextStyle(fontSize: 18)),
-                    pw.Text('please contact us at:',
-                        style: pw.TextStyle(fontSize: 18)),
-                    pw.Text('Mekit Garage', style: pw.TextStyle(fontSize: 18)),
-                    pw.Text('Phone: +91 89898 89898',
-                        style: pw.TextStyle(fontSize: 18)),
-                    pw.Text(
-                        'Address: This is a boring kinda place, just a lot of talking about cars, not for normal people.',
-                        style: pw.TextStyle(fontSize: 18)),
                   ],
                 ),
               ),

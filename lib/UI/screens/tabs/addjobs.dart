@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../widgets/card_widget.dart'; // Import your noteCard widget here
-import '../customer_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mekit_gms/UI/screens/vehicleprofilescreen.dart'; // Import VehicleProfile screen
 
 class AddJobs extends StatefulWidget {
   const AddJobs({Key? key}) : super(key: key);
@@ -12,20 +11,19 @@ class AddJobs extends StatefulWidget {
 }
 
 class _AddJobsState extends State<AddJobs> {
-  String _uid = ''; // Initialize _uid with an empty string
+  String _uid = '';
 
   @override
   void initState() {
     super.initState();
-    _getCurrentUser(); // Call this method when the widget initializes
+    _getCurrentUser();
   }
 
-  // Method to get the current user's UID
   Future<void> _getCurrentUser() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setState(() {
-        _uid = user.uid; // Store the UID in the variable
+        _uid = user.uid;
       });
     }
   }
@@ -41,9 +39,8 @@ class _AddJobsState extends State<AddJobs> {
                 .doc(_uid)
                 .collection('customers')
                 .snapshots()
-            : null, // Pass null if _uid is empty to prevent Firestore query
+            : null,
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          //checking the connection state, if we still load the data we display a progress bar
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -52,29 +49,67 @@ class _AddJobsState extends State<AddJobs> {
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
             return Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: GridView(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                children: snapshot.data!.docs
-                    .map((car) => noteCard(
-                          () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VehicleProfile(car),
+              child: ListView(
+                children: snapshot.data!.docs.map((customer) {
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('garages')
+                        .doc(_uid)
+                        .collection('customers')
+                        .doc(customer.id)
+                        .collection('jobs')
+                        .where('active', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context, jobSnapshot) {
+                      if (jobSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (jobSnapshot.hasData &&
+                          jobSnapshot.data!.docs.isNotEmpty) {
+                        return Column(
+                          children: jobSnapshot.data!.docs.map((job) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VehicleProfile(
+                                      customer: customer,
+                                      jobId: job.id,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(customer['customer_name']),
+                                    Text(customer['car_number']),
+                                    Text(job.id),
+                                  ],
+                                ),
                               ),
                             );
-                          },
-                          car,
-                        ))
-                    .toList(),
+                          }).toList(),
+                        );
+                      } else {
+                        return const Center(
+                          child: Text("No active jobs for this customer"),
+                        );
+                      }
+                    },
+                  );
+                }).toList(),
               ),
             );
           } else {
             return const Center(
               child: Text(
-                "You have no cars",
+                "You have no customers",
               ),
             );
           }
