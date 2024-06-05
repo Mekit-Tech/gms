@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -7,7 +8,7 @@ import 'package:mekit_gms/UI/screens/pdf_generator.dart';
 
 class VehicleProfile extends StatefulWidget {
   final QueryDocumentSnapshot customer;
-  final String jobId;
+  final String jobId; // Define the jobId parameter here
 
   const VehicleProfile({Key? key, required this.customer, required this.jobId})
       : super(key: key);
@@ -20,12 +21,22 @@ class _VehicleProfileState extends State<VehicleProfile> {
   String _uid = '';
   List<Map<String, dynamic>> parts = [];
   List<Map<String, dynamic>> labors = [];
+  bool loading = true; // Flag to track loading state
 
   @override
   void initState() {
     super.initState();
     _getCurrentUser();
-    _fetchJobDetails();
+    _fetchPartData();
+    _fetchLaborData();
+    // Start a timer to stop loading after 4 seconds
+    Timer(Duration(seconds: 4), () {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
+    });
   }
 
   Future<void> _getCurrentUser() async {
@@ -37,103 +48,74 @@ class _VehicleProfileState extends State<VehicleProfile> {
     }
   }
 
-  Future<void> _fetchJobDetails() async {
-    if (_uid.isNotEmpty) {
-      final partsSnapshot = await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('parts')
-          .get();
+  Future<void> _fetchPartData() async {
+    print("Fetching part data...");
+    final partSnapshot = await FirebaseFirestore.instance
+        .collection('garages')
+        .doc(_uid)
+        .collection('customers')
+        .doc(widget.customer.id)
+        .collection('jobs')
+        .doc(widget.jobId)
+        .collection('parts')
+        .get();
 
-      final laborsSnapshot = await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('labors')
-          .get();
+    setState(() {
+      parts = partSnapshot.docs.map((doc) => doc.data()).toList();
+    });
 
-      setState(() {
-        parts = partsSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList();
-        labors = laborsSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList();
-      });
-    }
+    print("Fetched ${parts.length} parts");
   }
 
-  Future<void> addOrUpdatePart(
-      {String? partId,
-      required String partName,
-      required double amount,
-      required int quantity}) async {
-    if (partId == null) {
-      // Add new part
-      await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('parts')
-          .add({'partName': partName, 'amount': amount, 'quantity': quantity});
-    } else {
-      // Update existing part
-      await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('parts')
-          .doc(partId)
-          .update(
-              {'partName': partName, 'amount': amount, 'quantity': quantity});
-    }
+  Future<void> _fetchLaborData() async {
+    print("Fetching labor data...");
+    final laborSnapshot = await FirebaseFirestore.instance
+        .collection('garages')
+        .doc(_uid)
+        .collection('customers')
+        .doc(widget.customer.id)
+        .collection('jobs')
+        .doc(widget.jobId)
+        .collection('labors')
+        .get();
 
-    _fetchJobDetails();
+    setState(() {
+      labors = laborSnapshot.docs.map((doc) => doc.data()).toList();
+    });
+
+    print("Fetched ${labors.length} labors");
   }
 
-  Future<void> addOrUpdateLabor(
-      {String? laborId,
-      required String laborName,
-      required double cost}) async {
-    if (laborId == null) {
-      // Add new labor
-      await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('labors')
-          .add({'laborName': laborName, 'cost': cost});
-    } else {
-      // Update existing labor
-      await FirebaseFirestore.instance
-          .collection('garages')
-          .doc(_uid)
-          .collection('customers')
-          .doc(widget.customer.id)
-          .collection('jobs')
-          .doc(widget.jobId)
-          .collection('labors')
-          .doc(laborId)
-          .update({'laborName': laborName, 'cost': cost});
-    }
+  Future<void> addPart(String partName, double amount, int quantity) async {
+    setState(() {
+      parts.add({'partName': partName, 'amount': amount, 'quantity': quantity});
+    });
 
-    _fetchJobDetails();
+    await FirebaseFirestore.instance
+        .collection('garages')
+        .doc(_uid)
+        .collection('customers')
+        .doc(widget.customer.id)
+        .collection('jobs')
+        .doc(widget.jobId)
+        .collection('parts')
+        .add({'partName': partName, 'amount': amount, 'quantity': quantity});
+  }
+
+  Future<void> addLabor(String laborName, double cost) async {
+    setState(() {
+      labors.add({'laborName': laborName, 'cost': cost});
+    });
+
+    await FirebaseFirestore.instance
+        .collection('garages')
+        .doc(_uid)
+        .collection('customers')
+        .doc(widget.customer.id)
+        .collection('jobs')
+        .doc(widget.jobId)
+        .collection('labors')
+        .add({'laborName': laborName, 'cost': cost});
   }
 
   double getTotalCost() {
@@ -153,20 +135,16 @@ class _VehicleProfileState extends State<VehicleProfile> {
     print(filePath);
   }
 
-  Future<Map<String, dynamic>?> _showPartDialog(
-      {String? partId, String? partName, double? amount, int? quantity}) async {
-    final TextEditingController partNameController =
-        TextEditingController(text: partName);
-    final TextEditingController amountController =
-        TextEditingController(text: amount?.toString());
-    final TextEditingController quantityController =
-        TextEditingController(text: quantity?.toString());
+  Future<Map<String, dynamic>?> _showAddPartPopup(BuildContext context) async {
+    final TextEditingController partNameController = TextEditingController();
+    final TextEditingController amountController = TextEditingController();
+    final TextEditingController quantityController = TextEditingController();
 
     return await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(partId == null ? 'Add Part' : 'Edit Part'),
+          title: const Text('Add Part'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -202,7 +180,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                   'quantity': quantity
                 });
               },
-              child: const Text('Save'),
+              child: const Text('Add'),
             ),
           ],
         );
@@ -210,18 +188,15 @@ class _VehicleProfileState extends State<VehicleProfile> {
     );
   }
 
-  Future<Map<String, dynamic>?> _showLaborDialog(
-      {String? laborId, String? laborName, double? cost}) async {
-    final TextEditingController laborNameController =
-        TextEditingController(text: laborName);
-    final TextEditingController costController =
-        TextEditingController(text: cost?.toString());
+  Future<Map<String, dynamic>?> _showAddLaborPopup(BuildContext context) async {
+    final TextEditingController laborNameController = TextEditingController();
+    final TextEditingController costController = TextEditingController();
 
     return await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(laborId == null ? 'Add Labor' : 'Edit Labor'),
+          title: const Text('Add Labor'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -247,7 +222,7 @@ class _VehicleProfileState extends State<VehicleProfile> {
                 final cost = double.tryParse(costController.text) ?? 0.0;
                 Navigator.pop(context, {'laborName': laborName, 'cost': cost});
               },
-              child: const Text('Save'),
+              child: const Text('Add'),
             ),
           ],
         );
@@ -255,176 +230,275 @@ class _VehicleProfileState extends State<VehicleProfile> {
     );
   }
 
-  Future<void> markJobAsCompleted() async {
-    await FirebaseFirestore.instance
-        .collection('garages')
-        .doc(_uid)
-        .collection('customers')
-        .doc(widget.customer.id)
-        .collection('jobs')
-        .doc(widget.jobId)
-        .update({'active': false});
-
-    Navigator.pop(
-        context); // Go back to the previous screen after marking as completed
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Vehicle Profile'),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 70,
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: false,
+        title: SizedBox(
+          width: 45,
+          child: Image.asset('assets/icons/mekitblacklogo.png'),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check_circle),
-            onPressed: markJobAsCompleted,
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection("cars").snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                print("Error: ${snapshot.error}");
+                return const Icon(Icons.error_outline);
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("Connection state is waiting.");
+                return const CircularProgressIndicator();
+              }
+
+              final int carCount = snapshot.data!.docs.length;
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 5.0, right: 20),
+                child: Text(
+                  carCount.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: SizedBox(
+              width: 55,
+              child: Image.asset(
+                'assets/icons/car.png',
+              ),
+            ),
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 20),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
+      floatingActionButton: SizedBox(
+        width: 200,
+        child: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          splashColor: Colors.greenAccent.shade700,
+          hoverColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          onPressed: generateAndSavePdf,
+          child: const Icon(
+            Icons.arrow_right_outlined,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 2,
+                ),
               ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.customer['customer_name'],
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 25,
-                  ),
-                ),
-                Text(
-                  widget.customer['car_number'],
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  widget.customer['car_model'],
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  widget.customer['year'].toString(),
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          ListTile(
-            title: const Text("Parts"),
-            trailing: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                final result = await _showPartDialog();
-                if (result != null) {
-                  await addOrUpdatePart(
-                    partName: result['partName'],
-                    amount: result['amount'],
-                    quantity: result['quantity'],
-                  );
-                }
-              },
-            ),
-          ),
-          ...parts.map((part) {
-            return ListTile(
-              title: Text(part['partName']),
-              subtitle: Text(
-                  'Amount: ${part['amount']} x Quantity: ${part['quantity']}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Row(
                 children: [
-                  Text(
-                      'Total: ${(part['amount'] * part['quantity']).toStringAsFixed(2)}'),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () async {
-                      final result = await _showPartDialog(
-                        partId: part['id'],
-                        partName: part['partName'],
-                        amount: part['amount'],
-                        quantity: part['quantity'],
-                      );
-                      if (result != null) {
-                        await addOrUpdatePart(
-                          partId: part['id'],
-                          partName: result['partName'],
-                          amount: result['amount'],
-                          quantity: result['quantity'],
-                        );
-                      }
-                    },
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.customer["customer_name"],
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 21,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        widget.customer["car_number"],
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            );
-          }).toList(),
-          ListTile(
-            title: const Text("Labors"),
-            trailing: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                final result = await _showLaborDialog();
-                if (result != null) {
-                  await addOrUpdateLabor(
-                    laborName: result['laborName'],
-                    cost: result['cost'],
-                  );
-                }
-              },
             ),
-          ),
-          ...labors.map((labor) {
-            return ListTile(
-              title: Text(labor['laborName']),
-              subtitle: Text('Cost: ${labor['cost']}'),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView(
+                children: [
+                  buildPartSection(),
+                  const SizedBox(height: 10),
+                  buildLaborSection(),
+                  const SizedBox(height: 10),
+                  buildTotalSection(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildPartSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Parts",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+              IconButton(
                 onPressed: () async {
-                  final result = await _showLaborDialog(
-                    laborId: labor['id'],
-                    laborName: labor['laborName'],
-                    cost: labor['cost'],
-                  );
-                  if (result != null) {
-                    await addOrUpdateLabor(
-                      laborId: labor['id'],
-                      laborName: result['laborName'],
-                      cost: result['cost'],
-                    );
+                  final newPart = await _showAddPartPopup(context);
+                  if (newPart != null) {
+                    addPart(newPart['partName'], newPart['amount'],
+                        newPart['quantity']);
                   }
                 },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
               ),
-            );
-          }).toList(),
-          const SizedBox(height: 20),
-          ListTile(
-            title: const Text("Total Cost"),
-            trailing: Text(getTotalCost().toStringAsFixed(2)),
+            ],
+          ),
+          parts.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "No parts available",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              : Column(
+                  children: parts
+                      .map((part) => ListTile(
+                            title: Text(part['partName']),
+                            subtitle: Text(
+                                'Amount: ${part['amount']} x Quantity: ${part['quantity']}'),
+                          ))
+                      .toList(),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildLaborSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 2,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Labor",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+              IconButton(
+                onPressed: () async {
+                  final newLabor = await _showAddLaborPopup(context);
+                  if (newLabor != null) {
+                    addLabor(newLabor['laborName'], newLabor['cost']);
+                  }
+                },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          labors.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "No labors available",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              : Column(
+                  children: labors
+                      .map((labor) => ListTile(
+                            title: Text(labor['laborName']),
+                            subtitle: Text('Cost: ${labor['cost']}'),
+                          ))
+                      .toList(),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTotalSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 2,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Total",
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            "Rs. ${getTotalCost()}",
+            style: const TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ],
       ),

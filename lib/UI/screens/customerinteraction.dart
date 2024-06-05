@@ -33,15 +33,14 @@ class _CreateInteractionScreenState extends State<CreateInteractionScreen> {
           .doc(widget.garageId)
           .collection('customers')
           .doc(widget.customerId)
-          .collection('interactions')
+          .collection('jobs') // Updated collection path
           .add({
         'date_time': _dateTimeController.text,
         'current_odo': _odoController.text,
         'customer_note': _customerNoteController.text,
         'additional_problems': _additionalProblemsController.text,
         'primary_job': _primaryJobController.text,
-        'labor': [],
-        'parts': [],
+        'status': 'active', // Initialize status as 'active'
       });
 
       Navigator.pop(context);

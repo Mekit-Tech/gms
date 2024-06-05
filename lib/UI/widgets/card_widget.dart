@@ -6,13 +6,13 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        color: Colors.blue.shade100,
-        borderRadius: BorderRadius.circular(8.0),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+            color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -34,7 +34,7 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
           Text(
             doc["car_model"],
             style: const TextStyle(
-              color: Colors.black,
+              color: Colors.grey,
               fontSize: 16,
             ),
           ),
@@ -42,8 +42,26 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
             color: Colors.black,
             height: 20,
             thickness: 1,
-            indent: 0,
-            endIndent: 0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Last Updated: ${doc["last_updated"]}',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                'Status: ${doc["status"]}',
+                style: TextStyle(
+                  color: doc["status"] == "Active" ? Colors.green : Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ],
       ),

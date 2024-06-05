@@ -1,10 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mekit_gms/UI/screens/tabs/addjobs.dart';
 import 'package:mekit_gms/UI/screens/tabs/contacts.dart';
 import 'package:mekit_gms/UI/screens/tabs/finance.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-// New Home
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,6 +12,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int activeJobsCount = 0;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

@@ -89,81 +89,57 @@ class CustomerDetails extends StatelessWidget {
                       .doc(garageId)
                       .collection('customers')
                       .doc(customerId)
-                      .collection('interactions')
+                      .collection('jobs') // Updated to fetch from 'jobs'
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    var interactions = snapshot.data!.docs;
+                    var jobs = snapshot.data!.docs;
 
-                    if (interactions.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('No interactions found.'),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateInteractionScreen(
-                                      garageId: garageId,
-                                      customerId: customerId,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: const Text('Create Interaction'),
-                            ),
-                          ],
-                        ),
+                    if (jobs.isEmpty) {
+                      return const Center(
+                        child: Text('No interactions found.'),
                       );
                     }
 
                     return ListView.builder(
-                      itemCount: interactions.length,
+                      itemCount: jobs.length,
                       itemBuilder: (context, index) {
-                        var interaction = interactions[index];
-                        var interactionData =
-                            interaction.data() as Map<String, dynamic>;
+                        var job = jobs[index];
+                        var jobData = job.data() as Map<String, dynamic>;
 
-                        var labor =
-                            interactionData['labor'] as List<dynamic>? ?? [];
-                        var parts =
-                            interactionData['parts'] as List<dynamic>? ?? [];
+                        String description = jobData['primary_job'] ?? 'N/A';
+                        String date = jobData['date_time'] != null
+                            ? formatDate(DateTime.parse(jobData['date_time']))
+                            : 'N/A';
+                        String status = jobData['status'] ?? 'active';
 
                         return Card(
                           elevation: 2.0,
                           margin: const EdgeInsets.symmetric(
                               horizontal: 8.0, vertical: 4.0),
-                          child: ExpansionTile(
-                            title:
-                                Text(interactionData['description'] ?? 'N/A'),
-                            subtitle: Text(
-                                'Date: ${interactionData['date'] ?? 'N/A'}'),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Labor:',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    ...labor.map((item) => Text(item)).toList(),
-                                    SizedBox(height: 8.0),
-                                    Text('Parts:',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    ...parts.map((item) => Text(item)).toList(),
-                                  ],
-                                ),
+                          child: ListTile(
+                            title: Text(description),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Date: $date'),
+                                Text('Status: $status'),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                status == 'active'
+                                    ? Icons.check_box_outline_blank
+                                    : Icons.check_box,
                               ),
-                            ],
+                              onPressed: () {
+                                updateJobStatus(garageId, customerId, job.id,
+                                    status == 'active' ? 'done' : 'active');
+                              },
+                            ),
                           ),
                         );
                       },
@@ -175,6 +151,54 @@ class CustomerDetails extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateInteractionScreen(
+                garageId: garageId,
+                customerId: customerId,
+              ),
+            ),
+          );
+        },
+        label: const Text('Create Interaction'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.black,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  String formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')} '
+        '${[
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ][date.month - 1]} '
+        '${date.year}';
+  }
+
+  void updateJobStatus(
+      String garageId, String customerId, String jobId, String newStatus) {
+    FirebaseFirestore.instance
+        .collection('garages')
+        .doc(garageId)
+        .collection('customers')
+        .doc(customerId)
+        .collection('jobs')
+        .doc(jobId)
+        .update({'status': newStatus});
   }
 }

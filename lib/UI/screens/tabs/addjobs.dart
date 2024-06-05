@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mekit_gms/UI/screens/vehicleprofilescreen.dart'; // Import VehicleProfile screen
+import 'package:mekit_gms/UI/screens/vehicleprofilescreen.dart';
 
 class AddJobs extends StatefulWidget {
   const AddJobs({Key? key}) : super(key: key);
@@ -58,7 +58,7 @@ class _AddJobsState extends State<AddJobs> {
                         .collection('customers')
                         .doc(customer.id)
                         .collection('jobs')
-                        .where('active', isEqualTo: true)
+                        .where('status', isEqualTo: 'active')
                         .snapshots(),
                     builder: (context, jobSnapshot) {
                       if (jobSnapshot.connectionState ==
@@ -71,6 +71,7 @@ class _AddJobsState extends State<AddJobs> {
                           jobSnapshot.data!.docs.isNotEmpty) {
                         return Column(
                           children: jobSnapshot.data!.docs.map((job) {
+                            var jobData = job.data() as Map<String, dynamic>;
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -85,11 +86,11 @@ class _AddJobsState extends State<AddJobs> {
                               },
                               child: Card(
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(customer['customer_name']),
-                                    Text(customer['car_number']),
-                                    Text(job.id),
+                                    Text(jobData['primary_job'] ?? 'N/A'),
                                   ],
                                 ),
                               ),
@@ -98,7 +99,7 @@ class _AddJobsState extends State<AddJobs> {
                         );
                       } else {
                         return const Center(
-                          child: Text("No active jobs for this customer"),
+                          child: Text(""),
                         );
                       }
                     },

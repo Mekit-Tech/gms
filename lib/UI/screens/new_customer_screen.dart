@@ -55,20 +55,31 @@ class _AddNewState extends State<AddNew> {
                 // Add customer data to Firestore
                 await FirebaseFirestore.instance
                     .collection("garages")
-                    .doc(ap.uid) // Use the uid property
-                    .collection("customers")
-                    .add({
-                  "car_number": regNoController.text,
-                  "customer_name": nameController.text,
-                  "phone_number": phoneNumberController.text,
-                  "chassis_number": chassisNumberController.text,
-                  "car_model": carModelController.text,
-                }).then((value) {
-                  // Navigate back after adding successfully
-                  Navigator.pop(context);
-                }).catchError((error) {
-                  // Handle error if adding failed
-                  print("Failed to Add New Customer due to $error");
+                    .where("uid", isEqualTo: ap.uid)
+                    .get()
+                    .then((garageSnapshot) {
+                  if (garageSnapshot.docs.isNotEmpty) {
+                    final garageId = garageSnapshot.docs[0].id;
+                    FirebaseFirestore.instance
+                        .collection("garages")
+                        .doc(garageId)
+                        .collection("customers")
+                        .add({
+                      "car_number": regNoController.text,
+                      "customer_name": nameController.text,
+                      "phone_number": phoneNumberController.text,
+                      "chassis_number": chassisNumberController.text,
+                      "car_model": carModelController.text,
+                    }).then((value) {
+                      // Navigate back after adding successfully
+                      Navigator.pop(context);
+                    }).catchError((error) {
+                      // Handle error if adding failed
+                      print("Failed to Add New Customer due to $error");
+                    });
+                  } else {
+                    print("Garage not found for UID: ${ap.uid}");
+                  }
                 });
               }
             },
