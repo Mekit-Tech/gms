@@ -22,16 +22,14 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthProvider(),
         ),
       ],
-      
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const WelcomeScreen(),
         routes: {
           'homepage': (context) => const HomeScreen(),
-          'newcustomer': (context) => const AddNew(), 
+          'newcustomer': (context) => const AddNew(),
         },
       ),
     );
   }
 }
-

@@ -73,28 +73,54 @@ class _AddJobsState extends State<AddJobs> {
                           children: jobSnapshot.data!.docs.map((job) {
                             var jobData = job.data() as Map<String, dynamic>;
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => VehicleProfile(
-                                      customer: customer,
-                                      jobId: job.id,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VehicleProfile(
+                                        customer: customer,
+                                        jobId: job.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  width: double.infinity,
+                                  child: Card(
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    color: Color.fromARGB(255, 210, 239,
+                                        253), // Set light blue background color
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            customer['customer_name'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            jobData['primary_job'] ?? 'N/A',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                              child: Card(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(customer['customer_name']),
-                                    Text(jobData['primary_job'] ?? 'N/A'),
-                                  ],
-                                ),
-                              ),
-                            );
+                                ));
                           }).toList(),
                         );
                       } else {

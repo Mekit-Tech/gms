@@ -31,35 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Image.asset('assets/icons/mekitblacklogo.png'),
           ),
           actions: [
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection("cars").snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  print("Error: ${snapshot.error}");
-                  return const Icon(Icons.error_outline);
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  print("Connection state is waiting.");
-                  return const CircularProgressIndicator();
-                }
-
-                final int carCount = snapshot.data!.docs.length;
-                print("Car Count: $carCount"); // Print the count for debugging
-
-                return Padding(
-                  padding: const EdgeInsets.only(top: 7.0, right: 20),
-                  child: Text(
-                    carCount.toString(),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                );
-              },
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(

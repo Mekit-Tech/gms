@@ -8,7 +8,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-Future<void> generatePdf(
+Future<void> generateReceiptPdf(
     QueryDocumentSnapshot doc,
     List<Map<String, dynamic>> parts,
     List<Map<String, dynamic>> labour,
@@ -207,7 +207,7 @@ Future<void> generatePdf(
                     .toList(),
               ),
               pw.SizedBox(height: 16),
-              pw.Text('Total Parts Estimate: Rs.$totalPartsCost',
+              pw.Text('Total Parts Cost: Rs.$totalPartsCost',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
@@ -228,11 +228,11 @@ Future<void> generatePdf(
                     .toList(),
               ),
               pw.SizedBox(height: 16),
-              pw.Text('Total Labour Estimate: Rs.$totalLabourCost',
+              pw.Text('Total Labour Cost: Rs.$totalLabourCost',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
-              pw.Text('Total Estimate: Rs.$totalEstimate',
+              pw.Text('Total: Rs.$totalEstimate',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
@@ -260,7 +260,7 @@ Future<void> generatePdf(
 
   // Save PDF to the device
   final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/example.pdf');
+  final file = File('${directory.path}/receipt.pdf');
   await file.writeAsBytes(await pdf.save());
 
   // Open the PDF file

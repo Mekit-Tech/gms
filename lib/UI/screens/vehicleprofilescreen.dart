@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mekit_gms/UI/screens/pdf_generator.dart';
+import 'package:mekit_gms/UI/screens/receipt_pdf.dart';
 
 class VehicleProfile extends StatefulWidget {
   final QueryDocumentSnapshot customer;
@@ -126,8 +127,9 @@ class _VehicleProfileState extends State<VehicleProfile> {
   }
 
   Future<void> generateAndSavePdf() async {
-    var data =
-        await generatePdf(widget.customer, parts, labors, getTotalCost());
+    var data = await generatePdf(widget.customer, parts, labors, getTotalCost(),
+        _uid, widget.customer.id, widget.jobId);
+
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
     String dirPath = '${appDocDirectory.path}/pdfs/';
     await File('$dirPath/file1.pdf').create(recursive: true);
@@ -245,34 +247,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
           child: Image.asset('assets/icons/mekitblacklogo.png'),
         ),
         actions: [
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("cars").snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                print("Error: ${snapshot.error}");
-                return const Icon(Icons.error_outline);
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                print("Connection state is waiting.");
-                return const CircularProgressIndicator();
-              }
-
-              final int carCount = snapshot.data!.docs.length;
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 5.0, right: 20),
-                child: Text(
-                  carCount.toString(),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-              );
-            },
-          ),
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: SizedBox(
@@ -284,21 +258,43 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 200,
-        child: FloatingActionButton(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
-          splashColor: Colors.greenAccent.shade700,
-          hoverColor: Colors.grey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: FloatingActionButton(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              splashColor: Colors.greenAccent.shade700,
+              hoverColor: Colors.grey,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              onPressed: generateAndSavePdf, // Function to generate estimate
+              child: const Icon(
+                Icons.arrow_right_outlined,
+              ),
+            ),
           ),
-          onPressed: generateAndSavePdf,
-          child: const Icon(
-            Icons.arrow_right_outlined,
-          ),
-        ),
+          // Positioned(
+          //   bottom: 16,
+          //   right: 16,
+          //   child: FloatingActionButton(
+          //     backgroundColor: Colors.black,
+          //     foregroundColor: Colors.white,
+          //     splashColor: Colors.greenAccent.shade700,
+          //     hoverColor: Colors.grey,
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //     onPressed: (null), // Function to generate receipt
+          //     child: const Icon(
+          //       Icons.receipt,
+          //     ),
+          //   ),
+          // ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(
