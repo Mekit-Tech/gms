@@ -21,8 +21,6 @@ Future<void> generatePdf(
 
   String customerName = dataAsMap["customer_name"] ?? "N/A";
   String rtoNumber = dataAsMap["car_number"] ?? "N/A";
-  String carModel = dataAsMap["car_model"] ?? "N/A";
-  String year = dataAsMap["year"]?.toString() ?? "N/A";
 
   // Fetch garage data
   String garageName = "N/A";
@@ -134,12 +132,12 @@ Future<void> generatePdf(
       pageFormat: pageSize,
       build: (pw.Context context) {
         return pw.Padding(
-          padding: pw.EdgeInsets.all(20),
+          padding: const pw.EdgeInsets.all(20),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Container(
-                padding: pw.EdgeInsets.all(16),
+                padding: const pw.EdgeInsets.all(16),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.grey),
                 ),
@@ -150,10 +148,10 @@ Future<void> generatePdf(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text('Mr.$customerName',
-                            style: pw.TextStyle(fontSize: 30)),
+                            style: const pw.TextStyle(fontSize: 30)),
                         pw.SizedBox(height: 5),
                         pw.Text('$rtoNumber',
-                            style: pw.TextStyle(fontSize: 20)),
+                            style: const pw.TextStyle(fontSize: 20)),
                       ],
                     ),
                     if (garageLogo != null)
@@ -163,7 +161,7 @@ Future<void> generatePdf(
               ),
               pw.SizedBox(height: 16),
               pw.Container(
-                padding: pw.EdgeInsets.all(16),
+                padding: const pw.EdgeInsets.all(16),
                 width: double.infinity,
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.grey),
@@ -171,23 +169,24 @@ Future<void> generatePdf(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('$garageName', style: pw.TextStyle(fontSize: 27)),
+                    pw.Text('cosnt $garageName',
+                        style: const pw.TextStyle(fontSize: 27)),
                     pw.SizedBox(height: 10),
                     pw.Text('Job: $primaryJob',
-                        style: pw.TextStyle(fontSize: 20)),
+                        style: const pw.TextStyle(fontSize: 20)),
                     pw.SizedBox(height: 10),
                     pw.Text('Odo: $odoReading KMs',
-                        style: pw.TextStyle(fontSize: 20)),
+                        style: const pw.TextStyle(fontSize: 20)),
                     pw.SizedBox(height: 10),
                     pw.Text('Date: $formattedDate',
-                        style: pw.TextStyle(fontSize: 20)),
+                        style: const pw.TextStyle(fontSize: 20)),
                   ],
                 ),
               ),
               pw.SizedBox(height: 16),
               pw.TableHelper.fromTextArray(
                 border: pw.TableBorder.all(color: PdfColors.grey),
-                headerDecoration: pw.BoxDecoration(
+                headerDecoration: const pw.BoxDecoration(
                   color: PdfColors.grey300,
                 ),
                 headerHeight: 35,
@@ -195,7 +194,7 @@ Future<void> generatePdf(
                 cellAlignment: pw.Alignment.centerLeft,
                 headerStyle:
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-                cellStyle: pw.TextStyle(fontSize: 18),
+                cellStyle: const pw.TextStyle(fontSize: 18),
                 headers: ['Item Description', 'MRP', 'Qty.', 'Total'],
                 data: processedParts
                     .map((part) => [
@@ -207,13 +206,13 @@ Future<void> generatePdf(
                     .toList(),
               ),
               pw.SizedBox(height: 16),
-              pw.Text('Total Parts Estimate: Rs.$totalPartsCost',
+              pw.Text('Total Parts : Rs.$totalPartsCost',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
               pw.TableHelper.fromTextArray(
                 border: pw.TableBorder.all(color: PdfColors.grey),
-                headerDecoration: pw.BoxDecoration(
+                headerDecoration: const pw.BoxDecoration(
                   color: PdfColors.grey300,
                 ),
                 headerHeight: 35,
@@ -221,24 +220,24 @@ Future<void> generatePdf(
                 cellAlignment: pw.Alignment.centerLeft,
                 headerStyle:
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-                cellStyle: pw.TextStyle(fontSize: 18),
+                cellStyle: const pw.TextStyle(fontSize: 18),
                 headers: ['Labour', 'Cost'],
                 data: processedLabour
                     .map((lab) => [lab['description'], 'Rs.${lab['cost']}'])
                     .toList(),
               ),
               pw.SizedBox(height: 16),
-              pw.Text('Total Labour Estimate: Rs.$totalLabourCost',
+              pw.Text('Total Labour : Rs.$totalLabourCost',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
-              pw.Text('Total Estimate: Rs.$totalEstimate',
+              pw.Text('Total : Rs.$totalEstimate',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
               if (customerNote.isNotEmpty)
                 pw.Container(
-                  padding: pw.EdgeInsets.all(16),
+                  padding: const pw.EdgeInsets.all(16),
                   decoration: pw.BoxDecoration(
                     border: pw.Border.all(color: PdfColors.grey),
                   ),
@@ -246,8 +245,9 @@ Future<void> generatePdf(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text('Customer Note:',
-                          style: pw.TextStyle(fontSize: 20)),
-                      pw.Text(customerNote, style: pw.TextStyle(fontSize: 18)),
+                          style: const pw.TextStyle(fontSize: 20)),
+                      pw.Text(customerNote,
+                          style: const pw.TextStyle(fontSize: 18)),
                     ],
                   ),
                 ),
