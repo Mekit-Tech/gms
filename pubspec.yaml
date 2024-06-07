@@ -28,6 +28,8 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.3.0
   flutter_typeahead: ^4.0.0
+  http: ^0.13.4
+  intl: ^0.17.0
 
 
 flutter_icons:
