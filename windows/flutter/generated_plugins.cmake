@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_core
   firebase_storage
   open_document
+  pdfx
   permission_handler_windows
   share_plus
   smart_auth

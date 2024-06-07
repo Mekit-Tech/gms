@@ -30,6 +30,9 @@ dependencies:
   flutter_typeahead: ^4.0.0
   http: ^0.13.4
   intl: ^0.17.0
+  flutter_pdfview: ^1.0.0+18
+  pdfx: ^2.3.0
+
 
 
 flutter_icons:

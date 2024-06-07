@@ -57,14 +57,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
     });
   }
 
-  Future<void> generatePdf(
-      QueryDocumentSnapshot doc,
-      List<Map<String, dynamic>> parts,
-      List<Map<String, dynamic>> labour,
-      double totalCost) async {
-    // Your implementation
-  }
-
   Future<void> addPart(String partName, double amount, int quantity) async {
     final partData = {
       'partName': partName,
@@ -168,11 +160,14 @@ class _VehicleProfileState extends State<VehicleProfile> {
           ),
           onPressed: () async {
             var data = await generatePdf(
-              widget.doc, // QueryDocumentSnapshot
-              parts, // List<Map<String, dynamic>> parts
-              labour, // List<Map<String, dynamic>> labour
-              totalCost, // double totalCost
-            );
+                widget.doc, // QueryDocumentSnapshot
+                parts, // List<Map<String, dynamic>> parts
+                labour, // List<Map<String, dynamic>> labour
+                totalCost, // double totalCost
+                "uid", // String uid - replace with actual UID if available
+                "customerId", // String customerId - replace with actual Customer ID if available
+                "jobId" // String jobId - replace with actual Job ID if available
+                );
             Directory appDocDirectory =
                 await getApplicationDocumentsDirectory();
             String dirPath = '${appDocDirectory.path}/pdfs/';
