@@ -12,6 +12,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          onPressed: () => sendPhoneNumber(),
+          onPressed: sendPhoneNumber,
           child: const Icon(
             Icons.arrow_forward,
           ),
@@ -79,11 +80,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: InputDecoration(
                 prefixText: '+91 ',
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black26)),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black26),
+                ),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black26)),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black26),
+                ),
                 hintText: '8888657702',
                 counterText: '',
               ),
@@ -94,11 +97,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // Funtion to send phone number
-
   void sendPhoneNumber() {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     String phoneNumber = phoneController.text.trim();
-    ap.signInWithPhone(context, "+91$phoneNumber");
+
+    if (phoneNumber.isNotEmpty && phoneNumber.length == 10) {
+      try {
+        ap.signInWithPhone(context,
+            "+91$phoneNumber"); // Calling without expecting a return value
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('OTP sent to $phoneNumber')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to send OTP: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please enter a valid 10-digit phone number')),
+      );
+    }
   }
 }

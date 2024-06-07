@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart' show rootBundle; // Import rootBundle
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -64,6 +65,10 @@ Future<void> generatePdf(
 
   // Create a new PDF document
   final pdf = pw.Document();
+
+  // Load custom font
+  final fontData = await rootBundle.load('assets/fonts/DMSans-Bold.ttf');
+  final customFont = pw.Font.ttf(fontData);
 
   // Process parts and labor data
   final processedParts = parts
@@ -148,10 +153,14 @@ Future<void> generatePdf(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text('Mr.$customerName',
-                            style: const pw.TextStyle(fontSize: 30)),
+                            style: pw.TextStyle(
+                                font: customFont,
+                                fontSize: 30)), // Use custom font here
                         pw.SizedBox(height: 5),
                         pw.Text('$rtoNumber',
-                            style: const pw.TextStyle(fontSize: 20)),
+                            style: pw.TextStyle(
+                                font: customFont,
+                                fontSize: 20)), // Use custom font here
                       ],
                     ),
                     if (garageLogo != null)
@@ -170,16 +179,24 @@ Future<void> generatePdf(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text('$garageName',
-                        style: const pw.TextStyle(fontSize: 27)),
+                        style: pw.TextStyle(
+                            font: customFont,
+                            fontSize: 27)), // Use custom font here
                     pw.SizedBox(height: 10),
                     pw.Text('Job: $primaryJob',
-                        style: const pw.TextStyle(fontSize: 20)),
+                        style: pw.TextStyle(
+                            font: customFont,
+                            fontSize: 20)), // Use custom font here
                     pw.SizedBox(height: 10),
                     pw.Text('Odo: $odoReading KMs',
-                        style: const pw.TextStyle(fontSize: 20)),
+                        style: pw.TextStyle(
+                            font: customFont,
+                            fontSize: 20)), // Use custom font here
                     pw.SizedBox(height: 10),
                     pw.Text('Date: $formattedDate',
-                        style: const pw.TextStyle(fontSize: 20)),
+                        style: pw.TextStyle(
+                            font: customFont,
+                            fontSize: 20)), // Use custom font here
                   ],
                 ),
               ),

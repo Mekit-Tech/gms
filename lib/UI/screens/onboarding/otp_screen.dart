@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mekit_gms/UI/screens/home_screen.dart';
-import 'package:mekit_gms/UI/screens/onboarding/garage_onboarding_screen.dart';
+import 'package:mekit_gms/UI/screens/onboarding/register_screen.dart';
 import 'package:mekit_gms/provider/auth_provider.dart';
-import 'package:mekit_gms/utils/utils.dart';
-import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
-  const OtpScreen({super.key, required this.verificationId});
+  const OtpScreen({Key? key, required this.verificationId}) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  int start = 30; // OTP Timer
   String? otpCode;
+
   @override
   Widget build(BuildContext context) {
     final isLoading =
@@ -25,7 +22,6 @@ class _OtpScreenState extends State<OtpScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         toolbarHeight: 70,
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -92,29 +88,20 @@ class _OtpScreenState extends State<OtpScreen> {
                     const SizedBox(
                       height: 50,
                     ),
-                    Pinput(
-                      length: 6,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      showCursor: true,
-                      defaultPinTheme: PinTheme(
-                        textStyle: const TextStyle(fontSize: 20),
-                        width: 50,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.black38),
-                        ),
-                      ),
-                      onCompleted: (value) {
-                        setState(() {
-                          otpCode = value;
-                        });
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      maxLength: 6,
+                      onChanged: (value) {
+                        otpCode = value;
                       },
                     ),
                     const SizedBox(height: 40),
                     GestureDetector(
-                      child: Text(
-                        "Resend OTP in $start secounds",
+                      onTap: () {
+                        // Implement resend OTP logic here
+                      },
+                      child: const Text(
+                        "Resend OTP",
                       ),
                     ),
                   ],
@@ -124,39 +111,49 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  // verify otp
   void verifyOtp(BuildContext context, String userOtp) {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     ap.verifyOtp(
-        context: context,
-        verificationId: widget.verificationId,
-        userOtp: userOtp,
-        onSucsess: () {
-          // Check weather Garage exists in the database
-          ap.checkExistingUser().then((value) async {
-            if (value == true) {
-              // Garage exists in our database
-              ap.getDataFromFirestore().then(
-                    (value) => ap.saveGarageDatatoSP().then(
-                          (value) => ap.setSignIn().then(
-                                (value) => Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomeScreen(),
-                                    ),
-                                    (route) => false),
-                              ),
-                        ),
-                  );
-            } else {
-              // New Garage
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const OnboardingScreen()),
-                  (route) => false);
-            }
-          });
+      context: context,
+      verificationId: widget.verificationId,
+      userOtp: userOtp,
+      onSuccess: () {
+        // Handle verification success
+        // Redirect to the appropriate screen based on the user's authentication status
+        ap.checkExistingUser().then((exists) {
+          if (exists) {
+            // Existing user
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+              (route) => false,
+            );
+          } else {
+            // New user
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RegisterScreen(),
+              ),
+              (route) => false,
+            );
+          }
         });
+      },
+      onFailure: (error) {
+        // Handle phone verification failure
+        showSnackBar(context, error);
+      },
+    );
+  }
+
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 }
