@@ -21,8 +21,6 @@ Future<void> generateReceiptPdf(
 
   String customerName = dataAsMap["customer_name"] ?? "N/A";
   String rtoNumber = dataAsMap["car_number"] ?? "N/A";
-  String carModel = dataAsMap["car_model"] ?? "N/A";
-  String year = dataAsMap["year"]?.toString() ?? "N/A";
 
   // Fetch garage data
   String garageName = "N/A";
