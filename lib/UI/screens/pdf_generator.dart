@@ -169,7 +169,7 @@ Future<void> generatePdf(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('cosnt $garageName',
+                    pw.Text('$garageName',
                         style: const pw.TextStyle(fontSize: 27)),
                     pw.SizedBox(height: 10),
                     pw.Text('Job: $primaryJob',
