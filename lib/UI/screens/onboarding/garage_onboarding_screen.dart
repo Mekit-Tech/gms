@@ -26,7 +26,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   // for selecting logo
-
   void selectImage() async {
     logo = await pickImage(context);
     setState(() {});
@@ -120,11 +119,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 hintText: 'Mekit Garage',
                               ),
                             ),
-
                             const SizedBox(
                               height: 10,
                             ),
-
                             // Address Field
                             TextFormField(
                               controller: addressController,
@@ -171,8 +168,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         garageModel: garageModel,
         garageLogo: logo!,
         onSuccess: () {
-          // ONCE THE DATA IS SAVED, WE HAVE TO STORE IT LOCACLLY ALSO.
-          ap.saveGarageDatatoSP().then(
+          // ONCE THE DATA IS SAVED, WE HAVE TO STORE IT LOCALLY ALSO.
+          ap.saveGarageDatatoSP(garageModel).then(
                 (value) => ap.setSignIn().then(
                       (value) => Navigator.push(
                         context,
@@ -187,5 +184,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     } else {
       showSnackBar(context, "Please upload your Logo");
     }
+  }
+
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 }

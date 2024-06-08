@@ -103,8 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (phoneNumber.isNotEmpty && phoneNumber.length == 10) {
       try {
-        ap.signInWithPhone(context,
-            "+91$phoneNumber"); // Calling without expecting a return value
+        ap.signInWithPhone(context, "+91$phoneNumber");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('OTP sent to $phoneNumber')),
         );

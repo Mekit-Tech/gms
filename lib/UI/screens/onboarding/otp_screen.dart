@@ -118,11 +118,8 @@ class _OtpScreenState extends State<OtpScreen> {
       verificationId: widget.verificationId,
       userOtp: userOtp,
       onSuccess: () {
-        // Handle verification success
-        // Redirect to the appropriate screen based on the user's authentication status
         ap.checkExistingUser().then((exists) {
           if (exists) {
-            // Existing user
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -131,7 +128,6 @@ class _OtpScreenState extends State<OtpScreen> {
               (route) => false,
             );
           } else {
-            // New user
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -143,7 +139,6 @@ class _OtpScreenState extends State<OtpScreen> {
         });
       },
       onFailure: (error) {
-        // Handle phone verification failure
         showSnackBar(context, error);
       },
     );

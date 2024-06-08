@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -71,7 +70,7 @@ class AuthProvider extends ChangeNotifier {
     required String verificationId,
     required String userOtp,
     required Function onSuccess,
-    required Function(String) onFailure, // Add this parameter
+    required Function(String) onFailure,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -93,7 +92,7 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message.toString());
-      onFailure(e.message.toString()); // Call onFailure if authentication fails
+      onFailure(e.message.toString());
       _isLoading = false;
       notifyListeners();
     }
@@ -114,65 +113,47 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      await storeFileToStorage("garageLogo/$_uid", garageLogo).then((value) {
-        garageModel.garageLogo = value;
-        garageModel.createdAt =
-            DateTime.now().microsecondsSinceEpoch.toString();
-        garageModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
-        garageModel.uid = _firebaseAuth.currentUser!.uid;
-      });
-      _garageModel = garageModel;
+      String logoUrl = await storeFileToStorage("garageLogo/$_uid", garageLogo);
+      garageModel.garageLogo = logoUrl;
+      garageModel.uid = _uid!;
+      garageModel.createdAt = DateTime.now().toString();
 
       await _firebaseFirestore
           .collection("garages")
           .doc(_uid)
-          .set(garageModel.toMap())
-          .then((value) {
-        onSuccess();
-        _isLoading = false;
-        notifyListeners();
-      });
-    } on FirebaseAuthException catch (e) {
+          .set(garageModel.toMap());
+
+      onSuccess();
+      _isLoading = false;
+      notifyListeners();
+    } on FirebaseException catch (e) {
       showSnackBar(context, e.message.toString());
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<String> storeFileToStorage(String ref, File file) async {
-    UploadTask uploadTask = _firebaseStorage.ref().child(ref).putFile(file);
-    TaskSnapshot snapshot = await uploadTask;
-    return await snapshot.ref.getDownloadURL();
+  Future<void> saveGarageDatatoSP(GarageModel garageModel) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('garageName', garageModel.name);
+    await prefs.setString('garageAddress', garageModel.address);
+    // Save other fields as necessary
+    notifyListeners();
   }
 
-  Future getDataFromFirestore() async {
-    DocumentSnapshot snapshot = await _firebaseFirestore
-        .collection("garages")
-        .doc(_firebaseAuth.currentUser!.uid)
-        .get();
-
-    _garageModel = GarageModel.fromMap(snapshot.data() as Map<String, dynamic>);
-    _uid = _garageModel!.uid;
-  }
-
-  Future saveGarageDatatoSP() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    await s.setString("garage_model", jsonEncode(garageModel.toMap()));
-  }
-
-  Future getDataFromSP() async {
+  Future<void> getDataFromSP() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     String data = s.getString("garage_model") ?? '';
-    _garageModel = GarageModel.fromMap(jsonDecode(data));
+    Map<String, dynamic> decodedData = jsonDecode(data); // Use jsonDecode here
+    _garageModel = GarageModel.fromMap(decodedData); // Update the garageModel
     _uid = _garageModel!.uid;
     notifyListeners();
   }
 
-  Future garageSignOut() async {
-    SharedPreferences s = await SharedPreferences.getInstance();
-    await _firebaseAuth.signOut();
-    _isSignedIn = false;
-    notifyListeners();
-    s.clear();
+  Future<String> storeFileToStorage(String ref, File file) async {
+    UploadTask uploadTask = _firebaseStorage.ref().child(ref).putFile(file);
+    TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
+    return downloadUrl;
   }
 }
