@@ -32,8 +32,8 @@ class _AddJobsState extends State<AddJobs> {
   void _makePhoneCall(String phoneNumber) async {
     final sanitizedPhoneNumber = phoneNumber.replaceAll(RegExp(r'\s+'), '');
     final Uri url = Uri(scheme: 'tel', path: sanitizedPhoneNumber);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
     } else {
       print('Could not launch $url');
     }
@@ -42,8 +42,8 @@ class _AddJobsState extends State<AddJobs> {
   void _openWhatsApp(String phoneNumber) async {
     final sanitizedPhoneNumber = phoneNumber.replaceAll(RegExp(r'\s+'), '');
     final Uri url = Uri.parse('https://wa.me/$sanitizedPhoneNumber');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
     } else {
       print('Could not launch $url');
     }
@@ -94,15 +94,15 @@ class _AddJobsState extends State<AddJobs> {
                                 child: CircularProgressIndicator(),
                               );
                             }
-                            if (jobSnapshot.hasData &&
-                                jobSnapshot.data!.docs.isNotEmpty) {
+                            var activeJobs = jobSnapshot.data!.docs;
+
+                            if (activeJobs.isNotEmpty) {
                               return Column(
-                                children: jobSnapshot.data!.docs.map((job) {
+                                children: activeJobs.map((job) {
                                   var jobData =
                                       job.data() as Map<String, dynamic>;
 
                                   return GestureDetector(
-                                    key: ValueKey(job.id),
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -114,70 +114,76 @@ class _AddJobsState extends State<AddJobs> {
                                         ),
                                       );
                                     },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      width: double.infinity,
-                                      child: Card(
-                                        elevation: 3,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        color: const Color.fromARGB(
-                                            255, 210, 239, 253),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12),
-                                          child: Row(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    customerData[
-                                                            'customer_name'] ??
-                                                        'Unknown',
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                    child: InkWell(
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        width: double.infinity,
+                                        child: Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          color: const Color.fromARGB(
+                                              255, 210, 239, 253),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Row(
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      customerData[
+                                                              'customer_name'] ??
+                                                          'Unknown',
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      customerData[
+                                                              'customer_phone'] ??
+                                                          'Unknown Phone Number',
+                                                      style: const TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 0, 0, 0),
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Spacer(),
+                                                if (customerData.containsKey(
+                                                    'customer_phone')) ...[
+                                                  IconButton(
+                                                    icon:
+                                                        const Icon(Icons.call),
+                                                    color: Colors.green,
+                                                    onPressed: () {
+                                                      _makePhoneCall(
+                                                          customerData[
+                                                              'customer_phone']);
+                                                    },
                                                   ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    jobData['car_number'] ??
-                                                        'Unknown Car Number',
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16,
-                                                    ),
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                        Icons.message),
+                                                    color: Colors.green,
+                                                    onPressed: () {
+                                                      _openWhatsApp(customerData[
+                                                          'customer_phone']);
+                                                    },
                                                   ),
                                                 ],
-                                              ),
-                                              const Spacer(),
-                                              if (customerData.containsKey(
-                                                  'customer_phone')) ...[
-                                                IconButton(
-                                                  icon: const Icon(Icons.call),
-                                                  color: Colors.green,
-                                                  onPressed: () {
-                                                    _makePhoneCall(customerData[
-                                                        'customer_phone']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon:
-                                                      const Icon(Icons.message),
-                                                  color: Colors.green,
-                                                  onPressed: () {
-                                                    _openWhatsApp(customerData[
-                                                        'customer_phone']);
-                                                  },
-                                                ),
                                               ],
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -186,9 +192,8 @@ class _AddJobsState extends State<AddJobs> {
                                 }).toList(),
                               );
                             } else {
-                              return const Center(
-                                child: Text(""),
-                              );
+                              return const SizedBox
+                                  .shrink(); // Don't occupy space if there are no active jobs
                             }
                           },
                         );

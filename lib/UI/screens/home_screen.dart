@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           bottom: TabBar(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 0, right: 0),
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             indicator: BoxDecoration(
