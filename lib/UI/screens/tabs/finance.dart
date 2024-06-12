@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Money Screen',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MoneyScreen(),
+    );
+  }
+}
+
 class MoneyScreen extends StatefulWidget {
   const MoneyScreen({Key? key}) : super(key: key);
 
@@ -14,17 +31,14 @@ class _MoneyScreenState extends State<MoneyScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the transactions list with existing data
     _fetchTransactions();
   }
 
-  // Fetch transactions from Firestore
   Future<void> _fetchTransactions() async {
     try {
-      // Example: Fetch transactions from Firestore
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection(
-              'transactions') // Replace with your Firestore collection name
+          .collection('transactions')
+          .where('status', isEqualTo: 'pending')
           .get();
 
       setState(() {
@@ -41,55 +55,63 @@ class _MoneyScreenState extends State<MoneyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('Transactions'),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Bills Sent (₹${_calculateTotalAmount()})",
-              style: const TextStyle(
-                fontFamily: 'DMSans',
-                color: Colors.black,
-                fontSize: 32,
-                fontWeight: FontWeight.normal,
+          children: transactions.map((transaction) {
+            return Dismissible(
+              key: Key(transaction.id),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                alignment: Alignment.centerRight,
+                color: Colors.green,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Icon(Icons.done, color: Colors.white),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: transactions.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TransactionItem(transaction: transactions[index]);
+              onDismissed: (direction) {
+                setState(() {
+                  transactions.remove(transaction);
+                  _markTransactionAsDone(transaction);
+                });
               },
-            ),
-          ],
+              child: TransactionItem(transaction: transaction),
+            );
+          }).toList(),
         ),
       ),
     );
   }
 
-  // Calculate total amount of transactions
-  double _calculateTotalAmount() {
-    double totalAmount = 0;
-    for (var transaction in transactions) {
-      totalAmount += transaction.amount;
+  Future<void> _markTransactionAsDone(Transaction transaction) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('transactions')
+          .doc(transaction.id)
+          .update({'status': 'done'});
+      print('Transaction marked as done: ${transaction.title}');
+    } catch (e) {
+      print('Error marking transaction as done: $e');
     }
-    return totalAmount;
   }
 }
 
 class Transaction {
+  final String id;
   final String title;
   final double amount;
 
-  Transaction({required this.title, required this.amount});
+  Transaction({required this.id, required this.title, required this.amount});
 
-  // Create a Transaction object from a Firestore document
   factory Transaction.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Transaction(
+      id: doc.id,
       title: data['title'] ?? '',
       amount: data['amount'] ?? 0,
     );

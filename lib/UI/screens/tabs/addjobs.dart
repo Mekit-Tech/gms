@@ -49,6 +49,17 @@ class _AddJobsState extends State<AddJobs> {
     }
   }
 
+  void _markAsDone(String customerId, String jobId) async {
+    await FirebaseFirestore.instance
+        .collection('garages')
+        .doc(_uid)
+        .collection('customers')
+        .doc(customerId)
+        .collection('jobs')
+        .doc(jobId)
+        .update({'status': 'done'});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,19 +113,34 @@ class _AddJobsState extends State<AddJobs> {
                                   var jobData =
                                       job.data() as Map<String, dynamic>;
 
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => VehicleProfile(
-                                            customer: customer,
-                                            jobId: job.id,
-                                          ),
-                                        ),
-                                      );
+                                  return Dismissible(
+                                    key: ValueKey(job.id),
+                                    direction: DismissDirection.endToStart,
+                                    onDismissed: (direction) {
+                                      _markAsDone(customer.id, job.id);
                                     },
-                                    child: InkWell(
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: EdgeInsets.only(right: 20),
+                                      color: Colors.green,
+                                      child: Icon(
+                                        Icons.done,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                VehicleProfile(
+                                              customer: customer,
+                                              jobId: job.id,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 5),

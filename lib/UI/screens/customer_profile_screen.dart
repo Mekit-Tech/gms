@@ -262,14 +262,28 @@ class _VehicleProfileState extends State<VehicleProfile> {
           child: Image.asset('assets/icons/mekitblacklogo.png'),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+            color: Colors.black,
+          ),
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 40),
             child: SizedBox(
               width: 55,
               child: Image.asset(
                 'assets/icons/car.png',
               ),
             ),
+          ),
+          IconButton(
+            onPressed: () {
+// Call functionality here
+            },
+            icon: Icon(Icons.call),
+            color: Colors.black,
           ),
         ],
       ),
@@ -521,7 +535,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
         .where('amount', isEqualTo: part['amount'])
         .where('quantity', isEqualTo: part['quantity'])
         .get();
-
     for (var doc in partRef.docs) {
       await doc.reference.delete();
     }
@@ -543,7 +556,6 @@ class _VehicleProfileState extends State<VehicleProfile> {
         .where('laborName', isEqualTo: labor['laborName'])
         .where('cost', isEqualTo: labor['cost'])
         .get();
-
     for (var doc in laborRef.docs) {
       await doc.reference.delete();
     }
