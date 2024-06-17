@@ -13,6 +13,7 @@ class CustomerContacts extends StatefulWidget {
 
 class _CustomerContactsState extends State<CustomerContacts> {
   String _searchQuery = '';
+
   Future<User?> _getCurrentUser() async {
     return FirebaseAuth.instance.currentUser;
   }
@@ -54,7 +55,7 @@ class _CustomerContactsState extends State<CustomerContacts> {
                 });
               },
             ),
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color.fromARGB(255, 117, 149, 255),
           ),
           body: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -76,50 +77,58 @@ class _CustomerContactsState extends State<CustomerContacts> {
                     .contains(_searchQuery);
               }).toList();
 
-              return ListView.builder(
-                itemCount: customers.length,
-                itemBuilder: (context, index) {
-                  var customer = customers[index];
-                  var customerData = customer.data() as Map<String, dynamic>;
+              return Container(
+                color: Color.fromARGB(255, 117, 149, 255),
+                child: ListView.builder(
+                  itemCount: customers.length,
+                  itemBuilder: (context, index) {
+                    var customer = customers[index];
+                    var customerData = customer.data() as Map<String, dynamic>;
 
-                  return Card(
-                    elevation: 2.0,
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 5.0),
-                    child: ListTile(
-                      title: Text(
-                        customerData['customer_name'] ?? 'N/A',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    return Card(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      elevation: 2.0,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 5.0),
+                      child: ListTile(
+                        title: Text(
+                          customerData['customer_name'] ?? 'N/A',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(
+                                255, 0, 0, 0), // Text color on blue card
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        customerData['car_number'] ?? 'Unknown Car Number',
-                        style: const TextStyle(
-                          fontSize: 16,
+                        subtitle: Text(
+                          customerData['car_number'] ?? 'Unknown Car Number',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(
+                                179, 0, 0, 0), // Subtitle color on blue card
+                          ),
                         ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.call, color: Colors.green),
-                        onPressed: () {
-                          _makePhoneCall(customerData['phone_number']);
+                        trailing: IconButton(
+                          icon: const Icon(Icons.call, color: Colors.green),
+                          onPressed: () {
+                            _makePhoneCall(customerData['phone_number']);
+                          },
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomerDetails(
+                                garageId: garageId,
+                                customerId: customer.id,
+                              ),
+                            ),
+                          );
                         },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CustomerDetails(
-                              garageId: garageId,
-                              customerId: customer.id,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             },
           ),
